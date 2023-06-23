@@ -1,0 +1,28 @@
+#navigationBar{
+    background-color: #0F416F;
+    padding: 0;
+}
+
+#navigationBar .nav-links{
+    color: white;
+    position: relative;
+    text-decoration: none;
+    margin-right: 10px;
+}
+
+  
+  #navigationBar .nav-links::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -1px;
+    width: 0;
+    height: 1px;
+    background-color: #ddd;
+    transition: width 0.3s ease-out;
+  }
+  
+  #navigationBar .nav-links:hover::after {
+    width: 100%;
+  }
+  
