@@ -1,8 +1,8 @@
-import '../Styles/Footer.css'
+import '../styles/landingPage.css'
 import { Container, Row, Col } from 'react-bootstrap'
 function Footer() {
     return (
-        <div className='mt-2 footer'>
+        <div className=' footer'>
             <Container>
                 <Row>
                     <Col>

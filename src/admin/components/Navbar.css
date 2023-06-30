@@ -1,0 +1,112 @@
+#sidebar-Toggler {
+  color: #0f416f;
+  font-size: 25px;
+  margin-right: 10px;
+}
+
+#sidebar-Toggler:hover {
+  color: rgb(8, 224, 8);
+}
+
+.main-header {
+  color: #0f416f;
+}
+
+.notification-profile {
+  font-size: 25px;
+}
+
+.notification-profile a {
+  color: #0f416f;
+}
+.notification-profile a:hover {
+  color: rgb(8, 224, 8);
+}
+
+.notification-profile span {
+  font-size: 10px;
+  position: absolute;
+  top: 7px;
+  right: -15px;
+  border-radius: 50%;
+}
+
+/* sidebar */
+#sidebar {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  background-color: #0f416f;
+  position: fixed;
+  height: 100%;
+  overflow: auto;
+  transition: all 0.5s ease;
+}
+
+#sidebar .icons {
+  margin-right: 10px;
+  font-size: 20px;
+  text-align: center;
+}
+
+/* when the page loads the sidebar should be active */
+.nav-menu-active {
+  width: 200px;
+}
+
+/* when the sidebar Toggle is toggled */
+.nav-menu {
+  width: 50px;
+  overflow: hidden;
+}
+.nav-menu .title {
+  display: none;
+  transition: all 0.5s ease;
+}
+
+/* main-content */
+#main-content {
+  background-color: azure;
+}
+
+/* main content on page load */
+.content-sidebar-active {
+  width: calc(100% - 200px);
+  margin-left: 200px;
+  transition: all 0.5s ease;
+}
+
+/* when the button is toggled */
+.content-sidebar-inactive {
+  width: calc(100% - 50px);
+  margin-left: 50px;
+  transition: all 0.5s ease;
+}
+
+.nav-text a {
+  text-decoration: none;
+  color: white;
+  font-size: 18px;
+  display: flex;
+  padding: 8px 16px;
+  align-items: center;
+  border-radius: 4px;
+  width: 95%;
+}
+
+.nav-text a:hover {
+  background-color: rgb(8, 224, 8);
+  color: white;
+}
+
+#main-content {
+}
+
+#addPatentBtn {
+  background-color: rgb(8, 224, 8);
+  color: white;
+}
+
+#addPatentBtn:hover {
+  background-color: #0f416f;
+}

@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
-import RegistrationForm from '../Components/RegistrationForm';
-import '../Styles/LandingBody.css'
+import RegistrationForm from './RegistrationForm';
+import '../styles/landingPage.css'
 import { Container, Row, Col, Modal } from "react-bootstrap"
-import NavigationBar from '../Components/Navbar';
-import Footer from '../Components/Footer';
+
 // import { type } from '@testing-library/user-event/dist/type';
 
-function LandingBody(props) {
-
+function LandingPageHome(props) {
 
     // for modal
     const [show, setShow] = useState(false);
@@ -15,11 +13,8 @@ function LandingBody(props) {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
-
     return (
-
         <div className="bg-light" >
-            <NavigationBar />
             <Container id='landingBody' className='d-flex align-items-center'>
                 <Row className='d-flex justify-content-center text-secondary'>
                     <Col md={6}>
@@ -53,15 +48,15 @@ function LandingBody(props) {
                                 <Modal.Title id='contained-model-title-vcenter' className='w-100 text-center'>Registration Form</Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
-                                <RegistrationForm/>
+                                <RegistrationForm />
                             </Modal.Body>
                         </Modal>
                     </Col>
                 </Row>
             </Container>
-            <Footer />
+
         </div>
     )
 }
 
-export default LandingBody;
+export default LandingPageHome;

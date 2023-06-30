@@ -1,0 +1,41 @@
+#adminnavbar {
+    color: #0F416F;
+}
+
+.main-header {
+    color: #0F416F;
+}
+
+#adminsidebar ul{
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    width: 240px;
+    background-color: #0F416F;
+    position: fixed;
+    height: 100%;
+    overflow: auto;
+}
+
+#adminsidebar ul .sidebarlinks {
+    display: block;
+    color: white;
+    padding: 8px 16px;
+    text-decoration: none;
+}
+
+#adminsidebar ul .sidebarlinks:hover {
+    background-color: #0fda0f;
+}
+
+.sidebarlinks i{
+    margin-right: 10px;
+    font-size: 20px;
+}
+
+#adminContent{
+    width: calc(100% - 240px);
+    padding: 0;
+    margin-left: 240px;
+    border-top: 1px solid black;
+}

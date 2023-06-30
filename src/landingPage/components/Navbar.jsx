@@ -1,6 +1,6 @@
 import { Nav, Container, Navbar } from 'react-bootstrap'
-import { Outlet, Link } from 'react-router-dom';
-import '../Styles/Navbar.css'
+import { Link } from 'react-router-dom';
+import '../styles/landingPage.css'
 function NavigationBar() {
     return (
         <>
@@ -28,7 +28,6 @@ function NavigationBar() {
                     </Navbar.Collapse>
                 </Container>
             </Navbar>
-            <Outlet />
         </>
     )
 }
