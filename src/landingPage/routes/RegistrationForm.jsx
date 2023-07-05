@@ -1,527 +1,597 @@
-import { useState } from "react";
-import { Form, Col, Row } from "react-bootstrap";
+import React from "react";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 import DatePicker from "react-datepicker";
+import * as Yup from "yup";
 import "react-datepicker/dist/react-datepicker.css";
 import "../styles/landingPage.css";
 import ReCAPTCHA from "react-google-recaptcha";
-import Swal from "sweetalert2";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function RegistrationForm() {
-  const [inputs, setInputs] = useState({
-    name: "",
-    nationalid: "",
-    phonenumber: "",
-    kuStudent: "",
-    school: "",
-    registrationNumber: "",
-    registeredIP: "",
-    incubationDate: "",
-    photo: "",
-    partner: "",
-    innovationCategory: "",
-    innovationStage: "",
-    description: "",
-  });
+  const url =
+    "http://localhost/incubation_system_rest_api/LandingPage/registration.php";
 
-  // Create a new FormData object
-  const formData = new FormData();
-
-  formData.append("name", inputs.name);
-  formData.append("email", inputs.email);
-  formData.append("nationalid", inputs.nationalid);
-  formData.append("mobile", inputs.phonenumber);
-  formData.append("kuStudent", inputs.kuStudent);
-  formData.append("school", inputs.school);
-  formData.append("registrationNumber", inputs.registrationNumber);
-  formData.append("registeredIP", inputs.registeredIP);
-  formData.append("incubationDate", inputs.incubationDate);
-  formData.append("photo", inputs.photo);
-  formData.append("partner", inputs.partner);
-  formData.append("innovationCategory", inputs.innovationCategory);
-  formData.append("innovationStage", inputs.innovationStage);
-  formData.append("description", inputs.description);
-
-  const handleFileChange = (e) => {
-    setInputs((values) => ({ ...values, photo: e.target.files[0] }));
-  };
-
-  const handleChange = (e) => {
-    const value =
-      e.target.type === "checkbox" ? e.target.checked : e.target.value;
-    setInputs((values) => ({ ...values, [e.target.name]: value }));
-
-    if (value === "Other") {
-      setOthers(true);
-    } else {
-      setOthers(false);
-    }
-  };
-
-  // state that defines the errors
-  const [errors, setErrors] = useState({});
-  // react-bootstrap validation
-  const [validated, setValidated] = useState(false);
-  // setting recaptcha states
-  const [recaptchaClicked, setRecaptchaClicked] = useState(false);
-  const [recaptchaClickedErr, setRecaptchaClickedErr] = useState(false);
-
-  // hide and show inputs field when the user is a KU
-  const [show, setShow] = useState(false);
-
-  //show an alert
-  const [alert, setAlert] = useState(false);
-
-  // others on select field
-  const [others, setOthers] = useState(false);
-
-  // fetch api function
-  async function sendInputData() {
+  async function sendInputData(formData, actions) {
     try {
-      const response = await fetch(
-        "http://localhost/incubation_system_rest_api/incubatee/insertRegistration.php",
-        {
-          method: "POST",
-          header: {
-            "Content-Type": "application/json",
-          },
-          body: formData,
-        }
-      );
+      const response = await fetch(url, {
+        method: "POST",
+        header: {
+          "Content-Type": "application/json",
+        },
+        body: formData,
+      });
 
       const responseData = await response.json();
       console.log(responseData.status);
-      if (responseData.status === 200) {
-        setInputs({
-          // Clear the form data
-          name: "",
-          nationalid: "",
-          phonenumber: "",
-          kuStudent: "",
-          school: "",
-          registrationNumber: "",
-          registeredIP: "",
-          incubationDate: null,
-          photo: null,
-          partner: "",
-          innovationCategory: "",
-          innovationStage: "",
-          description: "",
+      if (responseData.success === true) {
+        toast.success(responseData.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
         });
-
-        Swal.fire({
-          icon: "success",
-          title: "Success",
-          text: "Form submitted successfully!",
-          showConfirmButton: false,
-          timer: 5000,
+        actions.resetForm();
+      } else {
+        toast.warning(responseData.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
         });
       }
     } catch (error) {
-      console.error("Error:".error);
+      toast.error("Server connection failed!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
     }
-  }
-
-  // inputs form
-  function handleFormInputs(e) {
-    e.preventDefault();
-    const form = e.currentTarget;
-    if (recaptchaClicked && form.checkValidity() === true) {
-      sendInputData();
-    } else {
-      setRecaptchaClickedErr(true);
-      e.stopPropagation();
-    }
-    setValidated(true);
   }
 
   return (
-    <>
-      <Form
-        noValidate
-        validated={validated}
-        onSubmit={handleFormInputs}
-        id="registrationForm"
-      >
-        {alert ? (
-          <div className="alert alert-success" role="alert">
-            submitted successfully
-          </div>
-        ) : null}
-        <Row className="mb-3 g-3">
-          <Form.Group as={Col} md={6}>
-            <Form.Label htmlFor="name">
-              Full Name:<span className="text-danger ms-1">*</span>
-            </Form.Label>
-            <Form.Control
-              name="name"
-              value={inputs.name}
-              type="text"
-              id="name"
-              required
-              onChange={handleChange}
-              onBlur={(e) => {
-                let regex = /^[a-zA-Z]{2,15} [a-zA-Z]{2,15}$/;
-                if (regex.test(e.target.value)) {
-                  setErrors((values) => ({ ...values, nameErr: false }));
-                } else {
-                  setErrors((values) => ({ ...values, nameErr: true }));
+    <div className="bg-light">
+      <div className="container d-flex justify-content-center">
+        <Formik
+          initialValues={{
+            firstName: "",
+            lastName: "",
+            email: "",
+            phoneNumber: "",
+            nationalId: "",
+            photo: "",
+            kuStudent: "",
+            school: "",
+            registrationNumber: "",
+            ipRegistered: "",
+            incubationDate: "",
+            partnerNames: "",
+            innovationCategory: "",
+            innovationStage: "",
+            description: "",
+            ReCAPTCHA: "",
+          }}
+          validationSchema={Yup.object().shape({
+            firstName: Yup.string()
+              .matches(/^[a-zA-Z]+$/)
+              .max(15, "Should be 15 or less characters")
+              .min(2, "Should not be less than 2 characters")
+              .required("Required"),
+            lastName: Yup.string()
+              .matches(
+                /^[a-zA-Z]+$/,
+                "Should only include alphabetic characters"
+              )
+              .max(20, "Should be 20 or less characters")
+              .min(2, "Should not be less than 2 characters")
+              .required("Required"),
+            email: Yup.string()
+              .email("Invalid Email address")
+              .required("Required"),
+            phoneNumber: Yup.string()
+              .matches(/^0(1|7)[\d]{8}$/, "Invalid phone number hint: 07/01")
+              .required("Required"),
+            nationalId: Yup.string()
+              .matches(/^[0-9]{8}$/, "National Id must be 8 characters only")
+              .required("Required"),
+            photo: Yup.mixed()
+              .required("Required")
+              .test(
+                "FILE_SIZE",
+                "Too big!",
+                (value) => value && value.size < 1024 * 1024
+              )
+              .test(
+                "FILE_TYPE",
+                "Invalid!",
+                (value) =>
+                  value && ["image/png", "image/jpeg"].includes(value.type)
+              ),
+            kuStudent: Yup.string().required("required"),
+            ipRegistered: Yup.string().required("Required"),
+            incubationDate: Yup.string().required("Required"),
+            partnerNames: Yup.string()
+              .required("Required")
+              .test(
+                "wordCount",
+                "Description should not exceed 50 words",
+                (value) => {
+                  if (value) {
+                    const wordCount = value.trim().split(/\s+/).length;
+                    return wordCount <= 50;
+                  }
+                  return true;
                 }
-              }}
-            />
+              ),
+            innovationCategory: Yup.string()
+              .required("Required")
+              .notOneOf(["Choose..."], "Please select an option"),
+            innovationStage: Yup.string()
+              .required("Required")
+              .notOneOf(["Choose..."], "Please select an option"),
+            description: Yup.string()
+              .required("Required")
+              .test(
+                "wordCount",
+                "Description should not exceed 250 words",
+                (value) => {
+                  if (value) {
+                    const wordCount = value.trim().split(/\s+/).length;
+                    return wordCount <= 250;
+                  }
+                  return true;
+                }
+              ),
+            ReCAPTCHA: Yup.string().required("Required"),
+          })}
+          onSubmit={(values, actions) => {
+            const formData = new FormData();
+            Object.keys(values).forEach((key) => {
+              formData.append(key, values[key]);
+            });
 
-            {errors.nameErr ? (
-              <span className="errors">
-                Enter your firstname and lastname e.g John Doe
-              </span>
-            ) : null}
-          </Form.Group>
-          <Form.Group as={Col} md={6}>
-            <Form.Label htmlFor="email">
-              Email:<span className="text-danger ms-1">*</span>
-            </Form.Label>
-            <Form.Control
-              name="email"
-              id="email"
-              value={inputs.email}
-              type="email"
-              required
-              onChange={handleChange}
-            />
-          </Form.Group>
-          <Form.Group as={Col} md={6}>
-            <Form.Label htmlFor="nationalid">
-              National ID:<span className="text-danger ms-1">*</span>
-            </Form.Label>
-            <Form.Control
-              name="nationalid"
-              id="nationalid"
-              value={inputs.nationalid}
-              type="text"
-              required
-              onChange={handleChange}
-              onBlur={(e) => {
-                let regex = /^[0-9]{8}$/;
-                if (regex.test(e.target.value)) {
-                  setErrors((values) => ({ ...values, nationalIdErr: false }));
-                } else {
-                  setErrors((values) => ({ ...values, nationalIdErr: true }));
-                }
-              }}
-            />
-            {errors.nationalIdErr ? (
-              <span className="errors">National id must be 8 digit long</span>
-            ) : null}
-          </Form.Group>
-          <Form.Group as={Col} md={6}>
-            <Form.Label htmlFor="mobilenumber">
-              Mobile Number:<span className="text-danger ms-1">*</span>
-            </Form.Label>
-            <Form.Control
-              name="phonenumber"
-              id="mobilenumber"
-              value={inputs.phonenumber}
-              type="text"
-              required
-              onChange={handleChange}
-              onBlur={(e) => {
-                let regex = /^0(1|7)[\d]{8}$/;
-                if (regex.test(e.target.value)) {
-                  setErrors((values) => ({ ...values, mobileErr: false }));
-                } else {
-                  setErrors((values) => ({ ...values, mobileErr: true }));
-                }
-              }}
-            />
-            {errors.mobileErr ? (
-              <span className="errors">
-                Enter a valid number e.g 07xxxxxxxx / 01xxxxxxxx
-              </span>
-            ) : null}
-          </Form.Group>
-          <Form.Group as={Col} md={6}>
-            <Form.Label htmlFor="kustudent">
-              Are you a KU student?<span className="text-danger ms-1">*</span>
-            </Form.Label>
-            <Form.Check
-              type="radio"
-              name="kuStudent"
-              id="kustudent"
-              value="yes"
-              checked={inputs.kuStudent === "yes"}
-              label={"Yes"}
-              onChange={handleChange}
-              required
-              onClick={(e) => setShow(true)}
-            />
-            <Form.Check
-              type="radio"
-              name="kuStudent"
-              value="no"
-              checked={inputs.kuStudent === "no"}
-              label={"No"}
-              onChange={handleChange}
-              required
-              onClick={(e) => setShow(false)}
-            />
-            {show ? (
-              <>
-                <Form.Group as={Col}>
-                  <Form.Label htmlFor="school">
-                    School:<span className="text-danger ms-1">*</span>
-                  </Form.Label>
-                  <Form.Select
-                    name="school"
-                    id="school"
-                    onChange={handleChange}
-                    value={inputs.school}
-                    required
-                  >
-                    <option value="" disabled selected>
-                      Choose...
-                    </option>
-                    <option value="Agricultural and Environmental Science">
-                      Agricultural and Environmental Science
-                    </option>
-                    <option value="School and Business, Economics and Tourism">
-                      School and Business, Economics and Tourism
-                    </option>
-                    <option value="School of Engineering and Architecture">
-                      School of Engineering and Architecture
-                    </option>
-                    <option value="School of Health Science">
-                      School of Health Science
-                    </option>
-                    <option value="School of law, arts and social science">
-                      School of law, arts and social science
-                    </option>
-                    <option value="School of pure and applied science">
-                      School of pure and applied science
-                    </option>
-                    <option value="Graduate School">Graduate School</option>
-                    <option value="Digital School of virtual and open learning">
-                      Digital School of virtual and open learning
-                    </option>
-                  </Form.Select>
-                </Form.Group>
-                <Form.Group>
-                  <Form.Label htmlFor="registrationnumber">
-                    Registration Number:
-                    <span className="text-danger ms-1">*</span>
-                  </Form.Label>
-                  <Form.Control
-                    type="text"
-                    id="registrationnumber"
-                    name="registrationNumber"
-                    value={inputs.registrationNumber}
-                    onChange={handleChange}
-                    required
-                    onBlur={(e) => {
-                      let regex = /^[A-Za-z]\d{2}\/\d{4}\/\d{4}$/;
-                      if (regex.test(e.target.val)) {
-                        setErrors((values) => ({
-                          ...values,
-                          registrationNumberErr: false,
-                        }));
-                      } else {
-                        setErrors((values) => ({
-                          ...values,
-                          registrationNumberErr: true,
-                        }));
-                      }
-                    }}
-                  />
-                  {errors.registrationNumberErr ? (
-                    <span className="errors">
-                      Enter a valid registration Number
-                    </span>
-                  ) : null}
-                </Form.Group>
-              </>
-            ) : null}
-          </Form.Group>
-          <Form.Group as={Col} md={6}>
-            <Form.Label htmlFor="registeredip">
-              Is your Ip registered?<span className="text-danger ms-1">*</span>
-            </Form.Label>
-            <Form.Check
-              type="radio"
-              value="yes"
-              id="registeredip"
-              checked={inputs.registeredIP === "yes"}
-              name="registeredIP"
-              label={"Yes"}
-              required
-              onChange={handleChange}
-            />
-            <Form.Check
-              type="radio"
-              value="no"
-              checked={inputs.registeredIP === "no"}
-              name="registeredIP"
-              label={"No"}
-              required
-              onChange={handleChange}
-            />
-          </Form.Group>
-          <Form.Group as={Col} md={6}>
-            <Form.Label htmlFor="incubationdate">
-              Date of Incubation:<span className="text-danger ms-1">*</span>
-            </Form.Label>
-            <div className="w-100"></div>
-            <DatePicker
-              className="form-control"
-              required
-              id="incubationdate"
-              autoComplete="off"
-              name="incubationdate"
-              value={inputs.incubationDate}
-              selected={inputs.incubationDate}
-              maxDate={new Date()}
-              onChange={(date) => {
-                setInputs((values) => ({ ...values, incubationDate: date }));
-              }}
-            />
-          </Form.Group>
-          <Form.Group as={Col} md={6}>
-            <Form.Label htmlFor="photo">
-              Passport Photo:<span className="text-danger ms-1">*</span>
-            </Form.Label>
-            <Form.Control
-              id="photo"
-              required
-              type="file"
-              name="photo"
-              onChange={handleFileChange}
-            />
-          </Form.Group>
-          <Form.Group as={Col} md={8}>
-            <Form.Label htmlFor="partner">
-              Names of key partners/investors if any:
-            </Form.Label>
-            <Form.Control
-              type="text"
-              id="partner"
-              name="partner"
-              value={inputs.partner}
-              onChange={handleChange}
-            />
-          </Form.Group>
-          <Form.Group as={Col} md={8}>
-            <Form.Label htmlFor="innovationCategory">
-              Category of your Innovation:
-              <span className="text-danger ms-1">*</span>
-            </Form.Label>
-            <Form.Select
-              name="innovationCategory"
-              id="innovationCategory"
-              onChange={handleChange}
-              required
+            sendInputData(formData, actions);
+            // for (let entry of formData.entries()) {
+            //   console.log(entry);
+            // }
+          }}
+        >
+          {(props) => (
+            <Form
+              className="row g-3 border rounded px-3 pb-3"
+              id="registrationForm"
             >
-              <option value="" selected disabled>
-                Choose...
-              </option>
-              <option value="Business and Professional Services">
-                Business and Professional Services
-              </option>
-              <option value="Information and communication Technology">
-                Information and Communication Technology
-              </option>
-              <option value="Marketing and communication">
-                Marketing and communication
-              </option>
-              <option value="Manufacturing and communication">
-                Manufacturing and communication
-              </option>
-              <option value="Transport and logistics">
-                Transport and logistics
-              </option>
-              <option value="Bio and Nano-Technology">
-                Bio and Nano-Technology
-              </option>
-              <option value="Health and Nutrition">Health and Nutrition</option>
-              <option value="Bio and Nano-Technology">
-                Bio and Nano-Technology
-              </option>
-              <option value="Health and Nutrition">Health and Nutrition</option>
-              <option value="Green and ecological business">
-                Green and ecological business
-              </option>
-              <option value="Tourism and eco-tourism">
-                Tourism and eco-tourism
-              </option>
-              <option value="fine and Performing Arts">
-                Fine and Performing Arts
-              </option>
-              <option value="Sport, Leisure and Entertainment">
-                Sports, Leisure and Entertainment
-              </option>
-              <option value="water and Sanitation">Water and Sanitation</option>
-              <option value="Energy">Energy</option>
-            </Form.Select>
-          </Form.Group>
-          <Form.Group as={Col} md={8}>
-            <Form.Label htmlFor="innovationstage">
-              Stage of Innovation:<span className="text-danger ms-1">*</span>
-            </Form.Label>
-            <Form.Select
-              name="innovationStage"
-              id="innovationstage"
-              onChange={handleChange}
-              required
-            >
-              <option value="" disabled selected>
-                Choose...
-              </option>
-              <option value="Research and Development">
-                Research and Development
-              </option>
-              <option value="Prototype Phase">Prototype Phase</option>
-              <option value="Start-up">Start-Up</option>
-              <option value="Market phase">Market phase</option>
-              <option value="Scaling-up phase">Scaling-up phase</option>
-              <option value="Other">Other (Specify)</option>
-            </Form.Select>
-            {others ? <Form.Control name="otherfield" /> : null}
-          </Form.Group>
-          <Form.Group as={Col} md={12}>
-            <Form.Label htmlFor="description">
-              A brief description of your innovation. (not exceeding 250 words):
-              <span className="text-danger ms-1">*</span>
-            </Form.Label>
-            <Form.Control
-              as="textarea"
-              id="description"
-              name="description"
-              style={{ height: "300px" }}
-              value={inputs.description}
-              onChange={handleChange}
-              required
-            />
-          </Form.Group>
-          <Form.Group as={Col} md={6}>
-            <ReCAPTCHA
-              sitekey="6Lckv7AmAAAAAK9AlfL0fGpqN-2r3jdckUghvx_L"
-              onChange={() => setRecaptchaClicked(true)}
-            />
-            {recaptchaClickedErr === true && recaptchaClicked === false ? (
-              <span className="errors">
-                Click the Recaptcha before submitting
+              <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+              />
+
+              <h4
+                className="text-center border-bottom pb-2"
+                id="registrationHeader"
+              >
+                Registration Form
+              </h4>
+              {/* firstName */}
+              <div className="col-md-6">
+                <label htmlFor="firstName" className="form-label">
+                  First Name<span className="text-danger ms-2">*</span>
+                </label>
+                <Field
+                  type="text"
+                  name="firstName"
+                  id="firstName"
+                  className={`form-control ${
+                    props.errors.firstName && props.touched.firstName
+                      ? "input-error"
+                      : ""
+                  }`}
+                />
+                <span className="errors">
+                  <ErrorMessage name="firstName" />
+                </span>
+              </div>
+              {/* lastName */}
+              <div className="col-md-6">
+                <label htmlFor="lastName" className="form-label">
+                  Last Name<span className="text-danger ms-2">*</span>
+                </label>
+                <Field
+                  type="text"
+                  name="lastName"
+                  id="lastName"
+                  className={`form-control ${
+                    props.errors.lastName && props.touched.lastName
+                      ? "input-error"
+                      : ""
+                  }`}
+                />
+                <span className="errors">
+                  <ErrorMessage name="lastName" />
+                </span>
+              </div>
+              {/* email */}
+              <div className="col-md-6">
+                <label htmlFor="email" className="form-label">
+                  Email<span className="text-danger ms-2">*</span>
+                </label>
+                <Field
+                  type="email"
+                  name="email"
+                  id="email"
+                  className={`form-control ${
+                    props.errors.email && props.touched.email
+                      ? "input-error"
+                      : ""
+                  }`}
+                />
+                <span className="errors">
+                  <ErrorMessage name="email" />
+                </span>
+              </div>
+              {/* phone Number */}
+              <div className="col-md-6">
+                <label htmlFor="phoneNumber" className="form-label">
+                  Phone Number<span className="text-danger ms-2">*</span>
+                </label>
+                <Field
+                  type="text"
+                  name="phoneNumber"
+                  id="phoneNumber"
+                  className={`form-control ${
+                    props.errors.phoneNumber && props.touched.phoneNumber
+                      ? "input-error"
+                      : ""
+                  }`}
+                />
+                <span className="errors">
+                  <ErrorMessage name="phoneNumber" />
+                </span>
+              </div>
+              {/* national Id */}
+              <div className="col-md-6">
+                <label htmlFor="nationalId">
+                  National Id<span className="text-danger ms-2">*</span>
+                </label>
+                <Field
+                  type="text"
+                  name="nationalId"
+                  id="nationalId"
+                  className={`form-control ${
+                    props.errors.nationalId && props.touched.nationalId
+                      ? "input-error"
+                      : ""
+                  }`}
+                />
+                <span className="errors">
+                  <ErrorMessage name="nationalId" />
+                </span>
+              </div>
+
+              {/* photo */}
+              <div className="col-md-6">
+                <label htmlFor="photo" className="form-label">
+                  Photo<span className="text-danger">*</span>
+                </label>
+                <input
+                  type="file"
+                  name="photo"
+                  id="photo"
+                  className={`form-control ${
+                    props.errors.photo && props.touched.photo
+                      ? "input-error"
+                      : ""
+                  }`}
+                  onChange={(event) =>
+                    props.setFieldValue("photo", event.target.files[0])
+                  }
+                />
+                <span className="errors">
+                  <ErrorMessage name="photo" />
+                </span>
+              </div>
+
+              {/* kuStudent or not */}
+              <div className="col-md-6">
+                <div id="kuStudent">
+                  Are you a Ku student?
+                  <span className="text-danger ms-2">*</span>
+                </div>
+
+                <div className="form-check">
+                  <label>
+                    <Field
+                      type="radio"
+                      name="kuStudent"
+                      value="Yes"
+                      className="form-check-input"
+                    />
+                    Yes
+                  </label>
+                </div>
+                <div className="form-check">
+                  <label>
+                    <Field
+                      type="radio"
+                      name="kuStudent"
+                      value="No"
+                      className="form-check-input"
+                    />
+                    No
+                  </label>
+                </div>
+                {props.values.kuStudent === "Yes" ? (
+                  <>
+                    <label htmlFor="school" className="school">
+                      School
+                    </label>
+                    <Field as="select" name="school" className="form-select">
+                      {schools.map((school) => (
+                        <option key={school.id} value={school.name}>
+                          {school.name}
+                        </option>
+                      ))}
+                    </Field>
+
+                    <label htmlFor="registrationNumber" className="form-label">
+                      Registration Number
+                    </label>
+                    <Field
+                      type="text"
+                      name="registrationNumber"
+                      className="form-control"
+                    />
+                  </>
+                ) : null}
+                <span className="errors">
+                  <ErrorMessage name="kuStudent" />
+                </span>
+              </div>
+
+              {/* is your Ip registered */}
+              <div className="col-md-6">
+                <div id="ipRegistered">
+                  Is your Ip registered?
+                  <span className="text-danger ms-2">*</span>
+                </div>
+
+                <div className="form-check">
+                  <label>
+                    <Field
+                      type="radio"
+                      name="ipRegistered"
+                      value="Yes"
+                      className="form-check-input"
+                    />
+                    Yes
+                  </label>
+                </div>
+                <div className="form-check">
+                  <label>
+                    <Field
+                      type="radio"
+                      name="ipRegistered"
+                      value="No"
+                      className="form-check-input"
+                    />
+                    No
+                  </label>
+                </div>
+                <span className="errors">
+                  <ErrorMessage name="ipRegistered" />
+                </span>
+              </div>
+
+              {/* incubation Date */}
+              <div className="col-md-6">
+                <label htmlFor="incubationDate">
+                  IncubationDate<span className="text-danger ms-2">*</span>
+                </label>
+                <DatePicker
+                  id="incubationDate"
+                  className={`form-control ${
+                    props.errors.incubationDate && props.touched.incubationDate
+                      ? "input-error"
+                      : ""
+                  }`}
+                  autoComplete="off"
+                  onChange={(date) =>
+                    props.setFieldValue("incubationDate", date)
+                  }
+                  selected={props.values.incubationDate}
+                  dateFormat="yyyy/MM/dd"
+                  maxDate={new Date()}
+                />
+                <span className="errors">
+                  <ErrorMessage name="incubationDate" />
+                </span>
+              </div>
+
+              {/* names of key partner */}
+              <div className="col-md-6">
+                <label htmlFor="partnerNames" className="form-label">
+                  Name of key partners / investors if any
+                </label>
+                <Field
+                  type="text"
+                  name="partnerNames"
+                  id="partnerNames"
+                  className={`form-control ${
+                    props.errors.partnerNames && props.touched.partnerNames
+                      ? "input-error"
+                      : ""
+                  }`}
+                />
+                <span className="errors">
+                  <ErrorMessage name="partnerNames" />
+                </span>
+              </div>
+
+              {/* innovation Category */}
+              <div className="col-md-6">
+                <label htmlFor="innovationCategory">
+                  Category of Your Innovation
+                  <span className="text-danger ms-2">*</span>
+                </label>
+                <Field
+                  as="select"
+                  name="innovationCategory"
+                  id="innovationCategory"
+                  className={`form-select ${
+                    props.errors.innovationCategory &&
+                    props.touched.innovationCategory
+                      ? "input-error"
+                      : ""
+                  }`}
+                >
+                  {categories.map((category) => (
+                    <option key={category.id} value={category.name}>
+                      {category.name}
+                    </option>
+                  ))}
+                </Field>
+                <span className="errors">
+                  <ErrorMessage name="innovationCategory" />
+                </span>
+              </div>
+
+              {/* innovation stage */}
+              <div className="col-md-6">
+                <label htmlFor="innovationStage">
+                  Stage of your Innovation
+                  <span className="text-danger ms-2">*</span>
+                </label>
+                <Field
+                  as="select"
+                  name="innovationStage"
+                  id="innovationStage"
+                  className={`form-select ${
+                    props.errors.innovationStage &&
+                    props.touched.innovationStage
+                      ? "input-error"
+                      : ""
+                  }`}
+                >
+                  {stages.map((stage) => (
+                    <option key={stage.id} value={stage.name}>
+                      {stage.name}
+                    </option>
+                  ))}
+                </Field>
+                <span className="errors">
+                  <ErrorMessage name="innovationStage" />
+                </span>
+              </div>
+
+              {/* description */}
+              <div className="col">
+                <label htmlFor="description" className="form-label">
+                  A brief description of your innovation. (not exceeding 250
+                  words)<span className="text-danger ms-2">*</span>
+                </label>
+                <Field
+                  style={{ height: "300px" }}
+                  as="textarea"
+                  name="description"
+                  id="description"
+                  className={`form-control ${
+                    props.errors.description && props.touched.description
+                      ? "input-error"
+                      : ""
+                  }`}
+                />
+                <span className="errors">
+                  <ErrorMessage name="innovationStage" />
+                </span>
+              </div>
+              <section>
+                <ReCAPTCHA
+                  name="ReCAPTCHA"
+                  sitekey="6Lckv7AmAAAAAK9AlfL0fGpqN-2r3jdckUghvx_L"
+                  onChange={() => props.setFieldValue("ReCAPTCHA", true)}
+                  onExpired={() => props.setFieldValue("ReCAPTCHA", false)}
+                />
+                <span className="errors">
+                  <ErrorMessage name="ReCAPTCHA" />
+                </span>
+              </section>
+              <span className="col-12 d-flex justify-content-center">
+                <button
+                  type="submit"
+                  className="btn btn-success"
+                  id="submitButton"
+                >
+                  Submit
+                </button>
               </span>
-            ) : null}
-          </Form.Group>
-          <Form.Group
-            as={Col}
-            md={12}
-            className="d-flex justify-content-center mt-3"
-          >
-            <button className="btn" id="registrationBtn" type="submit">
-              Submit
-            </button>
-          </Form.Group>
-        </Row>
-      </Form>
-    </>
+            </Form>
+          )}
+        </Formik>
+      </div>
+    </div>
   );
 }
+
+const schools = [
+  { id: 1, name: "Choose..." },
+  { id: 2, name: "School of Agriculture ad Environmental Science" },
+  { id: 3, name: "School of Business, Economics and Tourism" },
+  { id: 4, name: "School of Education" },
+  { id: 5, name: "School of Engineering and Architecture" },
+  { id: 6, name: "School of Health Science" },
+  { id: 7, name: "School of Law, Arts and Social Sciences" },
+  { id: 8, name: "School of Pure And Applied Science" },
+  { id: 9, name: "Graduate School" },
+  { id: 10, name: "Digital School of Virtual and Open Learning" },
+];
+
+const categories = [
+  { id: 1, name: "Choose..." },
+  { id: 2, name: "Business and Professional Services" },
+  { id: 3, name: "Information and Professional Services" },
+  { id: 4, name: "Marketing and Communication Technology" },
+  { id: 5, name: "Manufacturing and Construction" },
+  { id: 6, name: "Transport and logistics" },
+  { id: 7, name: "Bio and Nano-Technology" },
+  { id: 8, name: "Health and Nutrition" },
+  { id: 9, name: "Green and ecological business" },
+  { id: 10, name: "Tourism and eco-tourism" },
+  { id: 11, name: "Fine and Performing Arts" },
+  { id: 12, name: "Sports, Leisure and Entertainment" },
+  { id: 13, name: "Water and Sanitation" },
+  { id: 14, name: "Energy" },
+  { id: 15, name: "Media and Entertainment" },
+];
+
+const stages = [
+  { id: 1, name: "Choose..." },
+  { id: 2, name: "Research and Development" },
+  { id: 3, name: "Prototype phase" },
+  { id: 4, name: "Start-up" },
+  { id: 5, name: "Market phase" },
+  { id: 6, name: "Scaling-up phase" },
+  { id: 7, name: "Other(Specify)" },
+];
 
 export default RegistrationForm;

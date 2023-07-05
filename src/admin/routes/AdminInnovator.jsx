@@ -38,10 +38,10 @@ function AdminInnovator() {
 
   // sort function
   const keys = [
-    "name",
+    "lastName",
     "email",
-    "nationalid",
-    "phonenumber",
+    "nationalId",
+    "phoneNumber",
     "innovationCategory",
     "innovationStage",
   ];
@@ -72,7 +72,8 @@ function AdminInnovator() {
               <thead>
                 <tr>
                   <th>#</th>
-                  <th scope="col">Name</th>
+                  <th scope="col">First Name</th>
+                  <th scope="col">Last Name</th>
                   <th scope="col">email</th>
                   <th scope="col">National ID</th>
                   <th scope="col">Phone Number</th>
@@ -85,10 +86,11 @@ function AdminInnovator() {
               <tbody>
                 {search(innovators).map((innovator, index) => {
                   const {
-                    name,
+                    firstName,
+                    lastName,
                     email,
-                    nationalid,
-                    phonenumber,
+                    nationalId,
+                    phoneNumber,
                     innovationCategory,
                     innovationStage,
                   } = innovator;
@@ -96,10 +98,11 @@ function AdminInnovator() {
                   return (
                     <tr key={index}>
                       <td>{index + 1}</td>
-                      <td>{name}</td>
+                      <td>{firstName}</td>
+                      <td>{lastName}</td>
                       <td>{email}</td>
-                      <td>{nationalid}</td>
-                      <td>{phonenumber}</td>
+                      <td>{nationalId}</td>
+                      <td>{phoneNumber}</td>
                       <td>{innovationCategory}</td>
                       <td>{innovationStage}</td>
                       <td>

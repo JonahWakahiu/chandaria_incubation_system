@@ -76,7 +76,8 @@ function AdminInnovator() {
               <thead>
                 <tr>
                   <th>#</th>
-                  <th scope="col">Name</th>
+                  <th scope="col">First Name</th>
+                  <th scope="col">Last Name</th>
                   <th scope="col">email</th>
                   <th scope="col">National ID</th>
                   <th scope="col">Phone Number</th>
@@ -91,10 +92,11 @@ function AdminInnovator() {
                 {registrations.map((registration, index) => {
                   const {
                     id,
-                    name,
+                    firstName,
+                    lastName,
                     email,
-                    nationalid,
-                    phonenumber,
+                    nationalId,
+                    phoneNumber,
                     innovationCategory,
                     innovationStage,
                   } = registration;
@@ -102,11 +104,12 @@ function AdminInnovator() {
 
                   return (
                     <tr key={id}>
-                      <td className="text-sm">{index + 1}</td>
-                      <td className="text-sm">{name}</td>
+                      <td>{index + 1}</td>
+                      <td>{firstName}</td>
+                      <td>{lastName}</td>
                       <td>{email}</td>
-                      <td>{nationalid}</td>
-                      <td>{phonenumber}</td>
+                      <td>{nationalId}</td>
+                      <td>{phoneNumber}</td>
                       <td>{innovationCategory}</td>
                       <td>{innovationStage}</td>
                       <td>

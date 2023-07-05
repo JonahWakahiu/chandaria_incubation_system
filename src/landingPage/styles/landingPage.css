@@ -1,100 +1,121 @@
+#registrationForm {
+  width: 75%;
+  margin-top: 50px;
+  margin-bottom: 20px;
+  background-color: white;
+}
+#submitButton {
+  width: 50%;
+}
+.react-datepicker-wrapper {
+  width: 100%;
+}
+.errors {
+  color: rgb(163, 10, 10);
+}
+
+#registrationForm .input-error {
+  border: 1px solid rgb(163, 10, 10);
+}
+
+#registrationHeader {
+  color: #0f416f;
+}
 @media screen and (min-width: 760px) {
-    #login-wrapper {
-        height: 89vh;
-    }
+  #login-wrapper {
+    height: 89vh;
+  }
 }
 
 /* landingBody */
 @media screen and (min-width: 760px) {
-    #landingBody {
-        height: 89vh;
-    }
+  #landingBody {
+    height: 89vh;
+  }
 }
 
-.main-heading{
-    color: #0F416F;
+.main-heading {
+  color: #0f416f;
 }
 
-#registerBtn{
-    background-color: #0F416F;
-    color: white;
-    width: 150px;
+#registerBtn {
+  background-color: #0f416f;
+  color: white;
+  width: 150px;
 }
 
-#registerBtn:hover{
-    background-color: rgb(10, 250, 10);
+#registerBtn:hover {
+  background-color: rgb(10, 250, 10);
 }
-#contained-model-title-vcenter{
-    color: #0F416F;
-}
-
-#submitRegistration{
-    background-color: #0F416F;
-    color: white;
-    width: 150px;
+#contained-model-title-vcenter {
+  color: #0f416f;
 }
 
-#submitRegistration:hover{
-    background-color: rgb(17, 245, 17);
+#submitRegistration {
+  background-color: #0f416f;
+  color: white;
+  width: 150px;
+}
+
+#submitRegistration:hover {
+  background-color: rgb(17, 245, 17);
 }
 
 /* Navbar css */
-#navigationBar{
-    background-color: #0F416F;
-    padding: 0;
+#navigationBar {
+  background-color: #0f416f;
+  padding: 0;
 }
 
-#navigationBar .nav-links{
-    color: white;
-    position: relative;
-    text-decoration: none;
-    margin-right: 10px;
+#navigationBar .nav-links {
+  color: white;
+  position: relative;
+  text-decoration: none;
+  margin-right: 10px;
 }
 
-  
-  #navigationBar .nav-links::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: -1px;
-    width: 0;
-    height: 1px;
-    background-color: #ddd;
-    transition: width 0.3s ease-out;
-  }
-  
-  #navigationBar .nav-links:hover::after {
-    width: 100%;
-  }
-
-  /* registration form */
-  #registrationBtn{
-    width: 150px;
-    background-color: #0F416F;
-    color: white;
+#navigationBar .nav-links::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 0;
+  height: 1px;
+  background-color: #ddd;
+  transition: width 0.3s ease-out;
 }
 
-#registrationBtn:hover{
-    background-color: rgb(18, 228, 18);
+#navigationBar .nav-links:hover::after {
+  width: 100%;
 }
 
-#registrationForm .errors{
-    color: rgb(189, 4, 4);
-    font-size: 13px;
+/* registration form */
+#registrationBtn {
+  width: 150px;
+  background-color: #0f416f;
+  color: white;
+}
+
+#registrationBtn:hover {
+  background-color: rgb(18, 228, 18);
+}
+
+#registrationForm .errors {
+  color: rgb(189, 4, 4);
+  font-size: 13px;
 }
 
 /* footer */
-.footer{
-    background-color: #0F416F;
-    color: white;
-    padding: 10px;
+.footer {
+  background-color: #0f416f;
+  color: white;
+  padding: 10px;
 }
 
-.footer i{
-    font-size: large;
+.footer i {
+  font-size: large;
 }
 
-.footer i:hover{
-    color: rgb(5, 250, 5);
+.footer i:hover {
+  color: rgb(5, 250, 5);
 }
-  

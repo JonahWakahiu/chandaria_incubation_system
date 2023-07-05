@@ -13,6 +13,7 @@ import AdminProfile from "./admin/routes/AdminProfile";
 import AdminAddPatent from "./admin/routes/AdminAddPatent";
 import PageNotFound from "./PageNotFound";
 import AdminRegistration from "./admin/routes/AdminRegistration";
+import RegistrationForm from "./landingPage/routes/RegistrationForm";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/" element={<LandingPageLayout />}>
           <Route index element={<LandingPageHome />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/registration" element={<RegistrationForm />} />
         </Route>
         <Route path="/admin" element={<AdminNavbar />}>
           <Route index element={<AdminDashboard />} />

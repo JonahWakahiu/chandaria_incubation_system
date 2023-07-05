@@ -70,7 +70,7 @@ function AdminNavbar() {
               className="bi bi-bell position-relative me-3"
             >
               <span className=" translate-middle badge bg-danger">
-                {notification}
+                {notification > 9 ? <p>9+</p> : <p>{notification}</p>}
               </span>
             </Link>
             <Link to="#" className="bi bi-person-circle"></Link>
