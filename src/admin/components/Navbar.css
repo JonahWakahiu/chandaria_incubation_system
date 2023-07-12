@@ -1,19 +1,11 @@
-#sidebar-Toggler {
-  color: #0f416f;
-  font-size: 25px;
-  margin-right: 10px;
+#navbar {
+  height: 50px;
+  background-color: #0f416f;
 }
-
-#sidebar-Toggler:hover {
-  color: rgb(8, 224, 8);
-}
-
-.main-header {
-  color: #0f416f;
-}
+/* old styles */
 
 .notification-profile {
-  font-size: 25px;
+  font-size: 20px;
 }
 
 .notification-profile a {

@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 
 function AdminInnovator() {
   const [innovators, setInnovators] = useState([]);
-  const [query, setQuery] = useState("");
 
   useEffect(() => {
     async function getRegistrationData() {
       try {
         const response = await fetch(
-          "http://localhost/incubation_system_rest_api/Admin/getInnovators.php",
+          "http://192.168.15.19/incubation_system_rest_api/Admin/getInnovators.php",
           {
             method: "GET",
             header: {
@@ -21,7 +21,7 @@ function AdminInnovator() {
         const innovators = responseData.data;
         setInnovators(innovators);
       } catch (error) {
-        console.error("Error:".error);
+        // console.error("Error:".error);
       }
     }
     getRegistrationData();
@@ -36,88 +36,28 @@ function AdminInnovator() {
     };
   }, []);
 
-  // sort function
-  const keys = [
-    "lastName",
-    "email",
-    "nationalId",
-    "phoneNumber",
-    "innovationCategory",
-    "innovationStage",
+  const columns = [
+    {
+      field: "id",
+      headerName: "ID",
+    },
+    { field: "firstName", headerName: "First Name" },
+    { field: "lastName", headerName: "Last Name" },
+    { field: "email", headerName: "Email", flex: 1 },
+    { field: "innovationCategory", headerName: "Innovation Category", flex: 1 },
+    { field: "innovationStage", headerName: "Innovation Stage", flex: 1 },
+    { field: "status", headerName: "Status" },
   ];
-
-  const search = (data) => {
-    return data.filter((item) =>
-      keys.some((key) => item[key].toLowerCase().includes(query))
-    );
-  };
-
   return (
     <>
-      <div className="container">
-        <div className="row">
-          <div className="col">
-            <h3 className="text-center">Registrations received</h3>
-
-            <input
-              className="form-control mb-2"
-              type="text"
-              placeholder="Search..."
-              aria-label="Search"
-              style={{ width: "300px" }}
-              onChange={(e) => setQuery(e.target.value)}
-            />
-
-            <table className="table table-striped">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th scope="col">First Name</th>
-                  <th scope="col">Last Name</th>
-                  <th scope="col">email</th>
-                  <th scope="col">National ID</th>
-                  <th scope="col">Phone Number</th>
-                  <th scope="col">innovation Category</th>
-                  <th scope="col">innovation Stage</th>
-                  <th scope="col">Status</th>
-                  <th scope="col">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {search(innovators).map((innovator, index) => {
-                  const {
-                    firstName,
-                    lastName,
-                    email,
-                    nationalId,
-                    phoneNumber,
-                    innovationCategory,
-                    innovationStage,
-                  } = innovator;
-
-                  return (
-                    <tr key={index}>
-                      <td>{index + 1}</td>
-                      <td>{firstName}</td>
-                      <td>{lastName}</td>
-                      <td>{email}</td>
-                      <td>{nationalId}</td>
-                      <td>{phoneNumber}</td>
-                      <td>{innovationCategory}</td>
-                      <td>{innovationStage}</td>
-                      <td>
-                        <small className="text-success fw-bold">active</small>
-                      </td>
-                      <td>
-                        <button className="btn btn-warning btn-sm">View</button>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        </div>
+      <div style={{ height: 400, width: "75%" }}>
+        {innovators && (
+          <DataGrid
+            rows={innovators}
+            columns={columns}
+            slots={{ toolbar: GridToolbar }}
+          />
+        )}
       </div>
     </>
   );

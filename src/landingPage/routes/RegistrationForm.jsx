@@ -10,7 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 function RegistrationForm() {
   const url =
-    "http://localhost/incubation_system_rest_api/LandingPage/registration.php";
+    "http://192.168.15.19/incubation_system_rest_api/LandingPage/registration.php";
 
   async function sendInputData(formData, actions) {
     try {
@@ -23,8 +23,19 @@ function RegistrationForm() {
       });
 
       const responseData = await response.json();
-      console.log(responseData.status);
-      if (responseData.success === true) {
+      if (responseData.status === 202) {
+        toast.info(responseData.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      } else if (responseData.status === 200) {
+        actions.resetForm();
         toast.success(responseData.message, {
           position: "top-right",
           autoClose: 5000,
@@ -35,7 +46,6 @@ function RegistrationForm() {
           progress: undefined,
           theme: "light",
         });
-        actions.resetForm();
       } else {
         toast.warning(responseData.message, {
           position: "top-right",
@@ -70,6 +80,7 @@ function RegistrationForm() {
             firstName: "",
             lastName: "",
             email: "",
+            verificationCode: "",
             phoneNumber: "",
             nationalId: "",
             photo: "",
@@ -82,27 +93,26 @@ function RegistrationForm() {
             innovationCategory: "",
             innovationStage: "",
             description: "",
-            ReCAPTCHA: "",
+            // ReCAPTCHA: "",
           }}
           validationSchema={Yup.object().shape({
             firstName: Yup.string()
-              .matches(/^[a-zA-Z]+$/)
-              .max(15, "Should be 15 or less characters")
-              .min(2, "Should not be less than 2 characters")
+              .matches(
+                /^[a-zA-Z]{2,15}$/,
+                "Should only contains alphabets and 2 to 15 characters"
+              )
               .required("Required"),
             lastName: Yup.string()
               .matches(
-                /^[a-zA-Z]+$/,
-                "Should only include alphabetic characters"
+                /^[a-zA-Z]{2,20}$/,
+                "Should only contains alphabets and 2 to 20 characters"
               )
-              .max(20, "Should be 20 or less characters")
-              .min(2, "Should not be less than 2 characters")
               .required("Required"),
             email: Yup.string()
               .email("Invalid Email address")
               .required("Required"),
             phoneNumber: Yup.string()
-              .matches(/^0(1|7)[\d]{8}$/, "Invalid phone number hint: 07/01")
+              // .matches(/^0(1|7)[\d]{8}$/, "Invalid phone number hint: 07/01")
               .required("Required"),
             nationalId: Yup.string()
               .matches(/^[0-9]{8}$/, "National Id must be 8 characters only")
@@ -155,7 +165,7 @@ function RegistrationForm() {
                   return true;
                 }
               ),
-            ReCAPTCHA: Yup.string().required("Required"),
+            // ReCAPTCHA: Yup.string().required("Required"),
           })}
           onSubmit={(values, actions) => {
             const formData = new FormData();
@@ -169,7 +179,7 @@ function RegistrationForm() {
             // }
           }}
         >
-          {(props) => (
+          {({ errors, touched, isSubmitting, values, setFieldValue }) => (
             <Form
               className="row g-3 border rounded px-3 pb-3"
               id="registrationForm"
@@ -203,9 +213,7 @@ function RegistrationForm() {
                   name="firstName"
                   id="firstName"
                   className={`form-control ${
-                    props.errors.firstName && props.touched.firstName
-                      ? "input-error"
-                      : ""
+                    errors.firstName && touched.firstName ? "input-error" : ""
                   }`}
                 />
                 <span className="errors">
@@ -222,9 +230,7 @@ function RegistrationForm() {
                   name="lastName"
                   id="lastName"
                   className={`form-control ${
-                    props.errors.lastName && props.touched.lastName
-                      ? "input-error"
-                      : ""
+                    errors.lastName && touched.lastName ? "input-error" : ""
                   }`}
                 />
                 <span className="errors">
@@ -241,10 +247,17 @@ function RegistrationForm() {
                   name="email"
                   id="email"
                   className={`form-control ${
-                    props.errors.email && props.touched.email
-                      ? "input-error"
-                      : ""
+                    errors.email && touched.email ? "input-error" : ""
                   }`}
+                />
+                <label htmlFor="verificationCode" className="form-label mt-2">
+                  Verification Code
+                </label>
+                <Field
+                  type="text"
+                  name="verificationCode"
+                  id="verificationCode"
+                  className="form-control"
                 />
                 <span className="errors">
                   <ErrorMessage name="email" />
@@ -260,7 +273,7 @@ function RegistrationForm() {
                   name="phoneNumber"
                   id="phoneNumber"
                   className={`form-control ${
-                    props.errors.phoneNumber && props.touched.phoneNumber
+                    errors.phoneNumber && touched.phoneNumber
                       ? "input-error"
                       : ""
                   }`}
@@ -279,9 +292,7 @@ function RegistrationForm() {
                   name="nationalId"
                   id="nationalId"
                   className={`form-control ${
-                    props.errors.nationalId && props.touched.nationalId
-                      ? "input-error"
-                      : ""
+                    errors.nationalId && touched.nationalId ? "input-error" : ""
                   }`}
                 />
                 <span className="errors">
@@ -299,12 +310,10 @@ function RegistrationForm() {
                   name="photo"
                   id="photo"
                   className={`form-control ${
-                    props.errors.photo && props.touched.photo
-                      ? "input-error"
-                      : ""
+                    errors.photo && touched.photo ? "input-error" : ""
                   }`}
                   onChange={(event) =>
-                    props.setFieldValue("photo", event.target.files[0])
+                    setFieldValue("photo", event.target.files[0])
                   }
                 />
                 <span className="errors">
@@ -341,7 +350,7 @@ function RegistrationForm() {
                     No
                   </label>
                 </div>
-                {props.values.kuStudent === "Yes" ? (
+                {values.kuStudent === "Yes" ? (
                   <>
                     <label htmlFor="school" className="school">
                       School
@@ -411,15 +420,13 @@ function RegistrationForm() {
                 <DatePicker
                   id="incubationDate"
                   className={`form-control ${
-                    props.errors.incubationDate && props.touched.incubationDate
+                    errors.incubationDate && touched.incubationDate
                       ? "input-error"
                       : ""
                   }`}
                   autoComplete="off"
-                  onChange={(date) =>
-                    props.setFieldValue("incubationDate", date)
-                  }
-                  selected={props.values.incubationDate}
+                  onChange={(date) => setFieldValue("incubationDate", date)}
+                  selected={values.incubationDate}
                   dateFormat="yyyy/MM/dd"
                   maxDate={new Date()}
                 />
@@ -438,7 +445,7 @@ function RegistrationForm() {
                   name="partnerNames"
                   id="partnerNames"
                   className={`form-control ${
-                    props.errors.partnerNames && props.touched.partnerNames
+                    errors.partnerNames && touched.partnerNames
                       ? "input-error"
                       : ""
                   }`}
@@ -459,8 +466,7 @@ function RegistrationForm() {
                   name="innovationCategory"
                   id="innovationCategory"
                   className={`form-select ${
-                    props.errors.innovationCategory &&
-                    props.touched.innovationCategory
+                    errors.innovationCategory && touched.innovationCategory
                       ? "input-error"
                       : ""
                   }`}
@@ -487,8 +493,7 @@ function RegistrationForm() {
                   name="innovationStage"
                   id="innovationStage"
                   className={`form-select ${
-                    props.errors.innovationStage &&
-                    props.touched.innovationStage
+                    errors.innovationStage && touched.innovationStage
                       ? "input-error"
                       : ""
                   }`}
@@ -516,7 +521,7 @@ function RegistrationForm() {
                   name="description"
                   id="description"
                   className={`form-control ${
-                    props.errors.description && props.touched.description
+                    errors.description && touched.description
                       ? "input-error"
                       : ""
                   }`}
@@ -525,21 +530,21 @@ function RegistrationForm() {
                   <ErrorMessage name="innovationStage" />
                 </span>
               </div>
-              <section>
+              {/* <section>
                 <ReCAPTCHA
                   name="ReCAPTCHA"
                   sitekey="6Lckv7AmAAAAAK9AlfL0fGpqN-2r3jdckUghvx_L"
-                  onChange={() => props.setFieldValue("ReCAPTCHA", true)}
-                  onExpired={() => props.setFieldValue("ReCAPTCHA", false)}
+                  onChange={() => setFieldValue("ReCAPTCHA", true)}
+                  onExpired={() => setFieldValue("ReCAPTCHA", false)}
                 />
                 <span className="errors">
                   <ErrorMessage name="ReCAPTCHA" />
                 </span>
-              </section>
+              </section> */}
               <span className="col-12 d-flex justify-content-center">
                 <button
                   type="submit"
-                  className="btn btn-success"
+                  className="btn btn-success registrationButton"
                   id="submitButton"
                 >
                   Submit

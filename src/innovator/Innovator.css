@@ -1,0 +1,8 @@
+#imageInnovator {
+  border-radius: 50%;
+  height: 70px;
+  width: 65px;
+  margin-left: 5px;
+  object-fit: center;
+  cursor: pointer;
+}

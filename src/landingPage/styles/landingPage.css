@@ -18,13 +18,17 @@
   border: 1px solid rgb(163, 10, 10);
 }
 
-#registrationHeader {
-  color: #0f416f;
-}
 @media screen and (min-width: 760px) {
-  #login-wrapper {
+  #loginContainer {
     height: 89vh;
   }
+}
+
+
+
+/* old styles */
+#registrationHeader {
+  color: #0f416f;
 }
 
 /* landingBody */

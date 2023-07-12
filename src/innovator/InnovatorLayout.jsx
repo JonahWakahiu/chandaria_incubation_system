@@ -1,21 +1,15 @@
-import React from 'react'
-import NavbarAdmin from '../admin/components/AdminNavbar';
-import { Outlet } from 'react-router-dom';
+import React from "react";
+
+import InnovatorNavbar from "./components/InnovatorNavbar";
 
 function InnovatorLayout() {
   return (
     <>
-    <div id='innovatorNavbar'>
-        <NavbarAdmin />
-    </div>
-    <div id='innovatorSidebar'>
-
-    </div>
-    <div id='innovatorMaincontent'>
-        <Outlet />
-    </div>
+      <div id="innovatorNavbar">
+        <InnovatorNavbar />
+      </div>
     </>
-  )
+  );
 }
 
 export default InnovatorLayout;
