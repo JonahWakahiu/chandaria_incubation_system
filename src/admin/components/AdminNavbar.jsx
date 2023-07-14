@@ -12,46 +12,42 @@ import * as BiIcons from "react-icons/bi";
 
 function AdminNavbar() {
   // const [sidebar, setSidebar] = useState(true);
-  // const [notification, setNotification] = useState(0);
+  const [notification, setNotification] = useState(0);
   const [collapsed, setCollapsed] = useState(false);
   const imageHeight = collapsed ? "60px" : "90px";
 
   // send an fetch Api request to get the result with pending .. status
-  // useEffect(() => {
-  //   async function getNewRegistration() {
-  //     try {
-  //       const response = await fetch(
-  //         "http://192.168.15.19/incubation_system_rest_api/Admin/notification.php",
-  //         {
-  //           method: "GET",
-  //           header: {
-  //             "Content-Type": "application/json",
-  //           },
-  //         }
-  //       );
+  useEffect(() => {
+    async function getNewRegistration() {
+      try {
+        const response = await fetch(
+          "http://localhost/incubation_system_rest_api/Admin/notification.php",
+          {
+            method: "GET",
+            header: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
-  //       const responseData = await response.json();
-  //       const newReading = responseData.data;
-  //       setNotification(newReading);
-  //     } catch (error) {
-  //       console.error("Error:".error);
-  //     }
-  //   }
-  //   getNewRegistration();
+        const responseData = await response.json();
+        const newReading = responseData.data;
+        setNotification(newReading);
+      } catch (error) {
+        console.error("Error:".error);
+      }
+    }
+    getNewRegistration();
 
-  //   const interval = setInterval(() => {
-  //     getNewRegistration();
-  //   }, 3000);
+    const interval = setInterval(() => {
+      getNewRegistration();
+    }, 3000);
 
-  //   // Clear the interval when the component unmounts or when the dependencies change
-  //   return () => {
-  //     clearInterval(interval);
-  //   };
-  // }, []);
-
-  // function showSidebar() {
-  //   setSidebar(!sidebar);
-  // }
+    // Clear the interval when the component unmounts or when the dependencies change
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
 
   return (
     <>
@@ -173,7 +169,11 @@ function AdminNavbar() {
               />
               <Stack direction="row" spacing={2} className="ms-auto">
                 <span className="d-flex align-items-center">
-                  <Badge badgeContent={4} color="secondary" className="me-3">
+                  <Badge
+                    badgeContent={notification}
+                    color="secondary"
+                    className="me-3"
+                  >
                     <FaIcons.FaRegBell
                       color="action"
                       style={{ fontSize: "20px" }}

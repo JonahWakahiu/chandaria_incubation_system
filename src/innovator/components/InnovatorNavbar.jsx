@@ -55,25 +55,32 @@ function InnovatorNavbar() {
               </div>
             </div>
           </div>
-          <MenuItem icon={<AiIcons.AiFillHome />}>Dashboard</MenuItem>
-          <p
-            className="ms-3 my-1 fw-bold border-bottom"
-            style={{ color: "#FF7200" }}
+          <MenuItem
+            icon={<AiIcons.AiFillHome />}
+            component={<Link to="/innovator" />}
           >
-            REPORTS
-          </p>
-          <MenuItem icon={<FaIcons.FaWpforms />}>Expectation Form</MenuItem>
-          <MenuItem icon={<FaIcons.FaChartLine />}>Progress Form</MenuItem>
-          <MenuItem icon={<VsIcons.VscMilestone />}>
-            Quarterly Milestone
+            Dashboard
           </MenuItem>
+
+          <MenuItem
+            component={<Link to="/innovator/expectation" />}
+            icon={<BiIcons.BiChart />}
+          >
+            Reports
+          </MenuItem>
+
           <p
             className="my-1 fw-bold border-bottom"
             style={{ color: "#FF7200 " }}
           >
             <span className="ms-3">USER</span>
           </p>
-          <MenuItem icon={<FaIcons.FaUser />}>Profile</MenuItem>
+          <MenuItem
+            component={<Link to="/innovator/profile" />}
+            icon={<FaIcons.FaUser />}
+          >
+            Profile
+          </MenuItem>
           <MenuItem icon={<BiIcons.BiLogOut />}>Logout</MenuItem>
         </Menu>
       </Sidebar>
@@ -90,7 +97,7 @@ function InnovatorNavbar() {
             />
             <Stack direction="row" spacing={2} className="ms-auto">
               <span className="d-flex align-items-center">
-                <Badge badgeContent={4} color="secondary" className="me-3">
+                <Badge badgeContent={1} color="secondary" className="me-3">
                   <FaIcons.FaRegBell
                     color="action"
                     style={{ fontSize: "20px" }}

@@ -7,10 +7,11 @@ import "../styles/landingPage.css";
 import ReCAPTCHA from "react-google-recaptcha";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { stages, categories, schools } from "../../data";
 
 function RegistrationForm() {
   const url =
-    "http://192.168.15.19/incubation_system_rest_api/LandingPage/registration.php";
+    "http://localhost/incubation_system_rest_api/LandingPage/registration.php";
 
   async function sendInputData(formData, actions) {
     try {
@@ -133,19 +134,17 @@ function RegistrationForm() {
             kuStudent: Yup.string().required("required"),
             ipRegistered: Yup.string().required("Required"),
             incubationDate: Yup.string().required("Required"),
-            partnerNames: Yup.string()
-              .required("Required")
-              .test(
-                "wordCount",
-                "Description should not exceed 50 words",
-                (value) => {
-                  if (value) {
-                    const wordCount = value.trim().split(/\s+/).length;
-                    return wordCount <= 50;
-                  }
-                  return true;
+            partnerNames: Yup.string().test(
+              "wordCount",
+              "Description should not exceed 50 words",
+              (value) => {
+                if (value) {
+                  const wordCount = value.trim().split(/\s+/).length;
+                  return wordCount <= 50;
                 }
-              ),
+                return true;
+              }
+            ),
             innovationCategory: Yup.string()
               .required("Required")
               .notOneOf(["Choose..."], "Please select an option"),
@@ -530,7 +529,7 @@ function RegistrationForm() {
                   <ErrorMessage name="innovationStage" />
                 </span>
               </div>
-              {/* <section>
+              <section>
                 <ReCAPTCHA
                   name="ReCAPTCHA"
                   sitekey="6Lckv7AmAAAAAK9AlfL0fGpqN-2r3jdckUghvx_L"
@@ -540,7 +539,7 @@ function RegistrationForm() {
                 <span className="errors">
                   <ErrorMessage name="ReCAPTCHA" />
                 </span>
-              </section> */}
+              </section>
               <span className="col-12 d-flex justify-content-center">
                 <button
                   type="submit"
@@ -557,46 +556,5 @@ function RegistrationForm() {
     </div>
   );
 }
-
-const schools = [
-  { id: 1, name: "Choose..." },
-  { id: 2, name: "School of Agriculture ad Environmental Science" },
-  { id: 3, name: "School of Business, Economics and Tourism" },
-  { id: 4, name: "School of Education" },
-  { id: 5, name: "School of Engineering and Architecture" },
-  { id: 6, name: "School of Health Science" },
-  { id: 7, name: "School of Law, Arts and Social Sciences" },
-  { id: 8, name: "School of Pure And Applied Science" },
-  { id: 9, name: "Graduate School" },
-  { id: 10, name: "Digital School of Virtual and Open Learning" },
-];
-
-const categories = [
-  { id: 1, name: "Choose..." },
-  { id: 2, name: "Business and Professional Services" },
-  { id: 3, name: "Information and Professional Services" },
-  { id: 4, name: "Marketing and Communication Technology" },
-  { id: 5, name: "Manufacturing and Construction" },
-  { id: 6, name: "Transport and logistics" },
-  { id: 7, name: "Bio and Nano-Technology" },
-  { id: 8, name: "Health and Nutrition" },
-  { id: 9, name: "Green and ecological business" },
-  { id: 10, name: "Tourism and eco-tourism" },
-  { id: 11, name: "Fine and Performing Arts" },
-  { id: 12, name: "Sports, Leisure and Entertainment" },
-  { id: 13, name: "Water and Sanitation" },
-  { id: 14, name: "Energy" },
-  { id: 15, name: "Media and Entertainment" },
-];
-
-const stages = [
-  { id: 1, name: "Choose..." },
-  { id: 2, name: "Research and Development" },
-  { id: 3, name: "Prototype phase" },
-  { id: 4, name: "Start-up" },
-  { id: 5, name: "Market phase" },
-  { id: 6, name: "Scaling-up phase" },
-  { id: 7, name: "Other(Specify)" },
-];
 
 export default RegistrationForm;

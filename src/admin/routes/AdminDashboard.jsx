@@ -7,13 +7,15 @@ import { ResponsivePie } from "@nivo/pie";
 import "../components/Navbar.css";
 
 function AdminDashboard() {
-  const [registeredIncubate, setRegisteredIncubate] = useState(0);
+  const [dashboard, setDashboard] = useState("");
+  const [graphData, setGraphData] = useState([]);
+  const [pieData, setPieData] = useState([]);
 
   useEffect(() => {
-    async function getRegisteredIncubatee() {
+    async function getDashboardData() {
       try {
         const response = await fetch(
-          "http://localhost/incubation_system_rest_api/Admin/notification.php",
+          "http://localhost/incubation_system_rest_api/Admin/handleAdminDashboard.php",
           {
             method: "GET",
             header: {
@@ -23,16 +25,20 @@ function AdminDashboard() {
         );
 
         const responseData = await response.json();
-        const reading = responseData.registeredIncubate;
-        setRegisteredIncubate(reading);
+        const dashboardData = responseData.data;
+        const graph = responseData.graph;
+        const pieData = responseData.pieData;
+        setDashboard(dashboardData);
+        setGraphData(graph);
+        setPieData(pieData);
       } catch (error) {
         console.error("Error:".error);
       }
     }
-    getRegisteredIncubatee();
+    getDashboardData();
 
     const interval = setInterval(() => {
-      getRegisteredIncubatee();
+      getDashboardData();
     }, 3000);
 
     // Clear the interval when the component unmounts or when the dependencies change
@@ -41,9 +47,6 @@ function AdminDashboard() {
     };
   }, []);
 
-  // function showSidebar() {
-  //   setSidebar(!sidebar);
-  // }
   return (
     <div className="container-fluid">
       <div className="row ms-2 me-5 my-3">
@@ -52,36 +55,44 @@ function AdminDashboard() {
           style={{ height: "150px" }}
         >
           <h6>Incubate Registered</h6>
+          {dashboard && dashboard.registeredIncubate}
         </div>
         <div
           className="col-md-4 col-lg-2 border rounded shadow me-2"
           style={{ height: "150px" }}
         >
-          <h6>Number of Ku students and Non KU students</h6>
+          <h6>Ku Students</h6>
+          {dashboard && dashboard.kuStudent}
+          <h6>Non Ku Student</h6>
+          {dashboard && dashboard.nonKuStudent}
         </div>
         <div
           className="col-md-4 col-lg-2 border rounded me-2 shadow"
           style={{ height: "150px" }}
         >
-          <h6>Number of mentors</h6>
+          <h6>mentors</h6>
+          {dashboard && dashboard.mentors}
         </div>
         <div
           className="col-md-4 col-lg-2 border rounded me-2 shadow"
           style={{ height: "150px" }}
         >
           <h6>Registered companies</h6>
+          {dashboard && dashboard.registeredCompanies}
         </div>
         <div
           className="col-md-4 col-lg-2 border rounded rounded me-2 shadow"
           style={{ height: "150px" }}
         >
           <h6>Commercialized companies</h6>
+          {dashboard && dashboard.commercializedCompanies}
         </div>
         <div
           className="col-md-4 col-lg border rounded me-2 shadow"
           style={{ height: "150px" }}
         >
           <h6>Patent filed</h6>
+          {dashboard && dashboard.patentFilled}
         </div>
       </div>
 
@@ -91,7 +102,7 @@ function AdminDashboard() {
           style={{ height: "60vh" }}
         >
           <ResponsiveBar
-            data={data}
+            data={graphData}
             keys={[
               "Business and Professional Services",
               "Information and Communication Technology",
@@ -222,7 +233,6 @@ function AdminDashboard() {
 }
 const data = [
   {
-    country: "Innovation Per category",
     "Business and Professional Services": 35,
     "Information and Communication Technology": 100,
     "Marketing and Communication": 50,
@@ -233,43 +243,10 @@ const data = [
     "Green and ecological business": 86,
     "Tourism and eco-tourism": 78,
     "Fine and Performing Arts": 88,
-    "Sports, Leisure and Entertainment": 7,
+    sports: 7,
     "Water and Sanitation": 19,
     Energy: 22,
     "Media and Entertainment": 46,
-  },
-];
-
-const pieData = [
-  {
-    id: "Research and development",
-    label: "Research",
-    value: 194,
-    color: "hsl(251, 70%, 50%)",
-  },
-  {
-    id: "Prototype",
-    label: "Prototype phase",
-    value: 369,
-    color: "hsl(185, 70%, 50%)",
-  },
-  {
-    id: "Start-up",
-    label: "Start-up",
-    value: 493,
-    color: "hsl(50, 70%, 50%)",
-  },
-  {
-    id: "Scaling-up",
-    label: "Scaling-up phase",
-    value: 45,
-    color: "hsl(47, 70%, 50%)",
-  },
-  {
-    id: "Other",
-    label: "Other (Specify)",
-    value: 376,
-    color: "hsl(209, 70%, 50%)",
   },
 ];
 

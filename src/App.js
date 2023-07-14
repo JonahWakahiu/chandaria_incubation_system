@@ -18,6 +18,8 @@ import MentorLayout from "./mentor/pages/MentorLayout";
 import MentorNavbar from "./mentor/components/MentorNavbar";
 import IncubateProgress from "./admin/routes/IncubateProgress";
 import InnovatorDashboard from "./innovator/pages/InnovatorDashboard";
+import ExpectationForm from "./innovator/pages/ExpectationForm";
+import InnovatorProfile from "./innovator/pages/InnovatorProfile";
 
 function App() {
   return (
@@ -41,6 +43,8 @@ function App() {
         </Route>
         <Route path="innovator" element={<InnovatorLayout />}>
           <Route index element={<InnovatorDashboard />} />
+          <Route path="expectation" element={<ExpectationForm />} />
+          <Route path="profile" element={<InnovatorProfile />} />
         </Route>
         <Route path="mentor" element={<MentorNavbar />}></Route>
         <Route path="/*" element={<PageNotFound />} />

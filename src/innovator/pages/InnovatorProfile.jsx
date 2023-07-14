@@ -4,7 +4,7 @@ import { stages, categories } from "../../data";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-function AdminProfile() {
+function InnovatorProfile() {
   return (
     <div className="container-fluid d-flex justify-content-center bg-body-secondary">
       <div className="row w-75 border rounded mt-4 mb-5 px-3 bg-body-tertiary d-flex justify-content-between">
@@ -259,4 +259,4 @@ function AdminProfile() {
   );
 }
 
-export default AdminProfile;
+export default InnovatorProfile;
