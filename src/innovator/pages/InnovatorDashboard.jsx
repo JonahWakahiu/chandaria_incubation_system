@@ -25,9 +25,9 @@ function InnovatorDashboard() {
             className="border rounded shadow me-2 col-3"
             style={{ height: "150px" }}
           >
-            <h6>Mentor</h6>
+            <h6></h6>
             <Avatar alt="user13" src="/img/user13.jpg" />
-            John Doe <br />
+            <br />
             <a className="mb-0" href="">
               Profile
             </a>

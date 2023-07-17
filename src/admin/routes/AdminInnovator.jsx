@@ -3,11 +3,13 @@ import { DataGrid, GridToolbar, GridValueGetterParams } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CheckIcon from "@mui/icons-material/Check";
 import ClearIcon from "@mui/icons-material/Clear";
-import { Box } from "@mui/material";
+import { Box, Stack, Divider, Avatar } from "@mui/material";
 import MoreHorizSharpIcon from "@mui/icons-material/MoreHorizSharp";
 import PendingIcon from "@mui/icons-material/Pending";
 import AirplanemodeInactiveSharpIcon from "@mui/icons-material/AirplanemodeInactiveSharp";
+import AutorenewRoundedIcon from "@mui/icons-material/AutorenewRounded";
 import AirplanemodeActiveSharpIcon from "@mui/icons-material/AirplanemodeActiveSharp";
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { ToastContainer, toast } from "react-toastify";
 
 function AdminInnovator() {
@@ -221,6 +223,11 @@ function AdminInnovator() {
       headerName: "ID",
     },
     {
+      field: "Image",
+      headerName: "Image",
+      renderCell: ({ row }) => <Avatar src={row.photo} />,
+    },
+    {
       field: "Full Name",
       headerName: "First Name",
       valueGetter: getFullName,
@@ -236,39 +243,51 @@ function AdminInnovator() {
     { field: "innovationCategory", headerName: "Innovation Category", flex: 1 },
     { field: "innovationStage", headerName: "Innovation Stage", flex: 1 },
     {
-      field: "delete",
-      headerName: "delete record",
-      renderCell: ({ row }) => (
-        <DeleteIcon
-          onClick={() => handleDelete(row.id, row.email)}
-          style={{ cursor: "pointer" }}
-        />
-      ),
-    },
-    {
       field: "status",
       headerName: "Status",
-      renderCell: ({ row }) => {
-        if (row.status === "pending") {
-          return (
-            <MoreHorizSharpIcon
+      renderCell: (params) => {
+        const status = params.value;
+
+        let color;
+        if (status === "active") {
+          color = "green";
+        } else if (status === "pending") {
+          color = "orange";
+        } else if (status === "inactive") {
+          color = "red";
+        }
+
+        return <span style={{ color }}>{status}</span>;
+      },
+    },
+    {
+      field: "delete",
+      headerName: "Action",
+      flex: 1,
+      renderCell: ({ row }) => (
+        <>
+          <DeleteOutlineOutlinedIcon
+            onClick={() => handleDelete(row.id, row.email)}
+            style={{ cursor: "pointer", color: "red" }}
+          />
+          <Divider orientation="vertical" flexItem />
+          {row.status === "pending" ? (
+            <AutorenewRoundedIcon
               onClick={() => handlePending(row.id, row.email, row.firstName)}
               style={{ cursor: "pointer" }}
             />
-          );
-        } else if (row.status === "active") {
-          return <AirplanemodeActiveSharpIcon style={{ cursor: "pointer" }} />;
-        } else if (row.status === "inactive") {
-          return (
+          ) : row.status === "active" ? (
+            <AirplanemodeActiveSharpIcon
+              style={{ cursor: "pointer", color: "green" }}
+            />
+          ) : row.status === "inactive" ? (
             <AirplanemodeInactiveSharpIcon
               onClick={() => handleInactive(row.id, row.email)}
               style={{ cursor: "pointer" }}
             />
-          );
-        } else {
-          return null; // Optionally handle other cases or return a default icon
-        }
-      },
+          ) : null}
+        </>
+      ),
     },
   ];
   return (
@@ -287,21 +306,19 @@ function AdminInnovator() {
           theme="light"
         />
         <div style={{ height: "88vh" }} className="col-12 mt-2">
-          {innovators && (
-            <DataGrid
-              sx={{
-                boxShadow: 2,
-                border: 2,
-                borderColor: "primary.light",
-                "& .MuiDataGrid-cell:hover": {
-                  color: "primary.main",
-                },
-              }}
-              rows={innovators}
-              columns={columns}
-              slots={{ toolbar: GridToolbar }}
-            />
-          )}
+          <DataGrid
+            sx={{
+              boxShadow: 2,
+              border: 2,
+              borderColor: "primary.light",
+              "& .MuiDataGrid-cell:hover": {
+                color: "primary.main",
+              },
+            }}
+            rows={innovators && innovators}
+            columns={columns}
+            slots={{ toolbar: GridToolbar }}
+          />
         </div>
       </div>
     </div>

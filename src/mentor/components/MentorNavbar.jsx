@@ -3,6 +3,7 @@ import { Sidebar, Menu, MenuItem } from "react-pro-sidebar";
 import { Avatar, Stack, Badge } from "@mui/material";
 import SettingsIcon from "@mui/icons-material/Settings";
 import * as FaIcons from "react-icons/fa";
+import * as FcIcons from "react-icons/fc";
 import * as AiIcons from "react-icons/ai";
 import * as BiIcons from "react-icons/bi";
 import { Link, Outlet } from "react-router-dom";
@@ -78,10 +79,18 @@ function MentorNavbar() {
             >
               <span className="ms-3">REPORTS</span>
             </p>
-            <MenuItem icon={<FaIcons.FaUser />}>
+            <MenuItem
+              icon={<FcIcons.FcComboChart />}
+              component={<Link to="/mentor/accelerationreport" />}
+            >
               Innovation acceleration
             </MenuItem>
-            <MenuItem icon={<FaIcons.FaUser />}>Profile</MenuItem>
+            <MenuItem
+              icon={<FaIcons.FaUser />}
+              component={<Link to="/mentor/profile" />}
+            >
+              Profile
+            </MenuItem>
             <MenuItem icon={<BiIcons.BiLogOut />}>Logout</MenuItem>
           </Menu>
         </Sidebar>

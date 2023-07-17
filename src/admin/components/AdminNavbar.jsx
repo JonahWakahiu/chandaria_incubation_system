@@ -1,5 +1,5 @@
 import { Link, Outlet } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Avatar, Stack, Badge } from "@mui/material";
 import SettingsIcon from "@mui/icons-material/Settings";
@@ -9,12 +9,15 @@ import * as FaIcons from "react-icons/fa";
 import * as AiIcons from "react-icons/ai";
 import * as GiIcons from "react-icons/gi";
 import * as BiIcons from "react-icons/bi";
+import { UserContext } from "../../UserContext";
 
 function AdminNavbar() {
   // const [sidebar, setSidebar] = useState(true);
   const [notification, setNotification] = useState(0);
   const [collapsed, setCollapsed] = useState(false);
   const imageHeight = collapsed ? "60px" : "90px";
+
+  const { user, setUser } = useContext(UserContext);
 
   // send an fetch Api request to get the result with pending .. status
   useEffect(() => {
@@ -92,7 +95,7 @@ function AdminNavbar() {
                   style={{ color: "#FF7200 " }}
                 >
                   <span className="d-block fw-bold">Admin</span>
-                  <span className="d-block">Jonah Wakahiu</span>
+                  <span className="d-block">{user && user.firstName}</span>
                 </div>
               </div>
             </div>
@@ -181,7 +184,7 @@ function AdminNavbar() {
                   </Badge>
                   <SettingsIcon />
                 </span>
-                <Avatar alt="Remy Sharp" src="/img/user22.jpg" />
+                <Avatar alt="Remy Sharp" src={user && user.photo} />
               </Stack>
             </div>
           </nav>

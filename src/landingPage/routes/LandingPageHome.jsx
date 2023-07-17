@@ -1,10 +1,13 @@
+import { useContext } from "react";
 import "../styles/landingPage.css";
 import { Container, Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { UserContext } from "../../UserContext";
 
 // import { type } from '@testing-library/user-event/dist/type';
 
 function LandingPageHome(props) {
+  const { user, setUser } = useContext(UserContext);
   return (
     <div className="bg-light">
       <Container id="landingBody" className="d-flex align-items-center">

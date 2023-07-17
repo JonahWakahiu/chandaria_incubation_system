@@ -529,7 +529,7 @@ function RegistrationForm() {
                   <ErrorMessage name="innovationStage" />
                 </span>
               </div>
-              <section>
+              {/* <section>
                 <ReCAPTCHA
                   name="ReCAPTCHA"
                   sitekey="6Lckv7AmAAAAAK9AlfL0fGpqN-2r3jdckUghvx_L"
@@ -539,7 +539,7 @@ function RegistrationForm() {
                 <span className="errors">
                   <ErrorMessage name="ReCAPTCHA" />
                 </span>
-              </section>
+              </section> */}
               <span className="col-12 d-flex justify-content-center">
                 <button
                   type="submit"

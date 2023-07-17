@@ -4,13 +4,14 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import { Outlet, Link } from "react-router-dom";
 import * as FaIcons from "react-icons/fa";
 import * as AiIcons from "react-icons/ai";
-import * as VsIcons from "react-icons/vsc";
 import * as BiIcons from "react-icons/bi";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import "../Innovator.css";
+import { UserContext } from "../../UserContext";
 
 function InnovatorNavbar() {
   const [collapsed, setCollapsed] = useState(false);
+  const { user } = useContext(UserContext);
 
   return (
     <div
@@ -51,7 +52,9 @@ function InnovatorNavbar() {
                 style={{ color: "#FF7200 " }}
               >
                 <span className="d-block fw-bold">Innovator</span>
-                <span className="d-block">Jonah Wakahiu</span>
+                <span className="d-block">
+                  {user && user.firstName} {user && user.lastName}
+                </span>
               </div>
             </div>
           </div>
@@ -105,7 +108,7 @@ function InnovatorNavbar() {
                 </Badge>
                 <SettingsIcon />
               </span>
-              <Avatar alt="user22" src="/img/user20.jpg" />
+              <Avatar alt="user22" src={user && user.photo} />
             </Stack>
           </div>
         </nav>

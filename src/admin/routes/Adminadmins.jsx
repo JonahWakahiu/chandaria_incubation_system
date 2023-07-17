@@ -69,7 +69,7 @@ async function sendAdminData(formData, actions) {
 function Adminadmins() {
   const [admins, setAdmins] = useState([]);
 
-  // get mentors on page load
+  // get admins on page load
   useEffect(() => {
     async function getAdminsData() {
       try {
@@ -123,25 +123,23 @@ function Adminadmins() {
       />
       <div className="row vh-100">
         <div className="col-12 col-lg-8 me-2 ">
-          {admins && (
-            <DataGrid
-              sx={{
-                boxShadow: 2,
-                border: 2,
-                borderColor: "primary.light",
-                "& .MuiDataGrid-cell:hover": {
-                  color: "primary.main",
-                },
-              }}
-              rows={admins}
-              columns={columns}
-              slots={{ toolbar: GridToolbar }}
-            />
-          )}
+          <DataGrid
+            sx={{
+              boxShadow: 2,
+              border: 2,
+              borderColor: "primary.light",
+              "& .MuiDataGrid-cell:hover": {
+                color: "primary.main",
+              },
+            }}
+            rows={admins && admins}
+            columns={columns}
+            slots={{ toolbar: GridToolbar }}
+          />
         </div>
         <div className="col">
           <Formik
-            initialValues={{ email: "", nationalId: "" }}
+            initialValues={{ firstName: "", email: "", nationalId: "" }}
             onSubmit={(values, actions) => {
               const formData = new FormData();
               Object.keys(values).forEach((key) => {
@@ -157,6 +155,15 @@ function Adminadmins() {
             {({ errors, touched, isSubmitting }) => (
               <Form className="row border rounded px-2 py-4 row justify-content-center g-2">
                 <h5 className="text-center">Add Admin</h5>
+                <div className="col-10">
+                  <label htmlFor="firstName">First Name</label>
+                  <Field
+                    type="text"
+                    name="firstName"
+                    className="form-control"
+                    id="firstName"
+                  />
+                </div>
                 <div className="col-10">
                   <label htmlFor="email">Email</label>
                   <Field

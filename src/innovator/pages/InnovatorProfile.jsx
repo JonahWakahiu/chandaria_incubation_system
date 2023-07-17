@@ -1,10 +1,12 @@
-import React from "react";
+import { useContext } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { stages, categories } from "../../data";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { UserContext } from "../../UserContext";
 
 function InnovatorProfile() {
+  const { user, setUser } = useContext(UserContext);
   return (
     <div className="container-fluid d-flex justify-content-center bg-body-secondary">
       <div className="row w-75 border rounded mt-4 mb-5 px-3 bg-body-tertiary d-flex justify-content-between">
@@ -33,6 +35,7 @@ function InnovatorProfile() {
                     First Name<span className="text-danger ms-2">*</span>
                   </label>
                   <Field
+                    value={user && user.firstName}
                     type="text"
                     name="firstName"
                     id="firstName"
@@ -50,6 +53,7 @@ function InnovatorProfile() {
                     Last Name<span className="text-danger ms-2">*</span>
                   </label>
                   <Field
+                    value={user && user.lastName}
                     type="text"
                     name="lastName"
                     id="lastName"
@@ -67,6 +71,7 @@ function InnovatorProfile() {
                     Email<span className="text-danger ms-2">*</span>
                   </label>
                   <Field
+                    value={user && user.email}
                     type="email"
                     name="email"
                     id="email"
@@ -85,6 +90,7 @@ function InnovatorProfile() {
                     Phone Number<span className="text-danger ms-2">*</span>
                   </label>
                   <Field
+                    value="phoneNumber"
                     type="text"
                     name="phoneNumber"
                     id="phoneNumber"
@@ -104,6 +110,7 @@ function InnovatorProfile() {
                     National Id<span className="text-danger ms-2">*</span>
                   </label>
                   <Field
+                    value={user && user.nationalId}
                     type="text"
                     name="nationalId"
                     id="nationalId"
@@ -147,6 +154,7 @@ function InnovatorProfile() {
                     Name of key partners / investors if any
                   </label>
                   <Field
+                    value={user && user.partnerNames}
                     type="text"
                     name="partnerNames"
                     id="partnerNames"
@@ -168,6 +176,7 @@ function InnovatorProfile() {
                     <span className="text-danger ms-2">*</span>
                   </label>
                   <Field
+                    value={user && user.innovationCategory}
                     as="select"
                     name="innovationCategory"
                     id="innovationCategory"
@@ -195,6 +204,7 @@ function InnovatorProfile() {
                     <span className="text-danger ms-2">*</span>
                   </label>
                   <Field
+                    value={user && user.innovationStage}
                     as="select"
                     name="innovationStage"
                     id="innovationStage"
@@ -222,6 +232,7 @@ function InnovatorProfile() {
                     words)<span className="text-danger ms-2">*</span>
                   </label>
                   <Field
+                    value={user && user.description}
                     style={{ height: "150px" }}
                     as="textarea"
                     name="description"

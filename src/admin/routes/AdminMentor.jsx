@@ -122,26 +122,25 @@ function AdminMentor() {
         theme="light"
       />
       <div className="row vh-100 g-2 ">
-        <div className="col-lg-8  me-2">
-          {mentors && (
-            <DataGrid
-              sx={{
-                boxShadow: 2,
-                border: 2,
-                borderColor: "primary.light",
-                "& .MuiDataGrid-cell:hover": {
-                  color: "primary.main",
-                },
-              }}
-              rows={mentors}
-              columns={columns}
-              slots={{ toolbar: GridToolbar }}
-            />
-          )}
+        <div style={{ height: "88vh" }} className="col-8 mt-2">
+          <DataGrid
+            sx={{
+              boxShadow: 2,
+              border: 2,
+              borderColor: "primary.light",
+              "& .MuiDataGrid-cell:hover": {
+                color: "primary.main",
+              },
+            }}
+            rows={mentors && mentors}
+            columns={columns}
+            slots={{ toolbar: GridToolbar }}
+          />
         </div>
+
         <div className="col align-items-center">
           <Formik
-            initialValues={{ email: "", nationalId: "" }}
+            initialValues={{ firstName: "", email: "", nationalId: "" }}
             onSubmit={(values, actions) => {
               const formData = new FormData();
               Object.keys(values).forEach((key) => {
@@ -157,6 +156,15 @@ function AdminMentor() {
             {({ error, touched, isSubmitting }) => (
               <Form className="row border rounded px-2 py-4 row justify-content-center g-2">
                 <h6 className="text-center">Add mentor</h6>
+                <div className="col-10">
+                  <label htmlFor="firstName">First Name</label>
+                  <Field
+                    type="text"
+                    name="firstName"
+                    className="form-control"
+                    id="firstName"
+                  />
+                </div>
                 <div className="col-10">
                   <label htmlFor="email" className="form-label">
                     Email

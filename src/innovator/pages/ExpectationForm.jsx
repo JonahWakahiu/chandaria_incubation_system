@@ -1,6 +1,7 @@
 import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { ToastContainer, toast } from "react-toastify";
+import { services } from "../../data";
 
 function ExpectationForm() {
   const url =
@@ -358,26 +359,4 @@ function ExpectationForm() {
   );
 }
 
-const services = [
-  { id: 1, name: "Design thinking and learn start-up" },
-  { id: 2, name: "Assistance with business basics" },
-  { id: 3, name: "Networking activities" },
-  { id: 4, name: "Marketing assistance" },
-  { id: 5, name: "High-speed internet access" },
-  { id: 6, name: "Help with accounting/financial management" },
-  {
-    id: 7,
-    name: "Access to seed capital, bank loans, loans funds, and guarantee programs",
-  },
-  { id: 8, name: "Help with presentation/pitching skills" },
-  { id: 9, name: "Link to higher education resources and partners" },
-  { id: 10, name: "Access to angel investors or venture capital" },
-  { id: 11, name: "Comprehensive business training programs" },
-  { id: 12, name: "Advisory board and mentors" },
-  { id: 13, name: "Management teams identification" },
-  { id: 14, name: "Help with business etiquette" },
-  { id: 15, name: "Technology commercialization assistance" },
-  { id: 16, name: "Assistance with regulation compliance" },
-  { id: 17, name: "Intellectual property management" },
-];
 export default ExpectationForm;

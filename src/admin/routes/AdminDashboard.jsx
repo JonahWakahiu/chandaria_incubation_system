@@ -231,23 +231,5 @@ function AdminDashboard() {
     </div>
   );
 }
-const data = [
-  {
-    "Business and Professional Services": 35,
-    "Information and Communication Technology": 100,
-    "Marketing and Communication": 50,
-    "Manufacturing and Construction": 67,
-    "Transport and logistics": 39,
-    "Bio and Nano-Technology": 45,
-    "Health and Nutrition": 12,
-    "Green and ecological business": 86,
-    "Tourism and eco-tourism": 78,
-    "Fine and Performing Arts": 88,
-    sports: 7,
-    "Water and Sanitation": 19,
-    Energy: 22,
-    "Media and Entertainment": 46,
-  },
-];
 
 export default AdminDashboard;
