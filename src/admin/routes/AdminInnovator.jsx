@@ -13,7 +13,7 @@ import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined
 import { ToastContainer, toast } from "react-toastify";
 
 function AdminInnovator() {
-  const [innovators, setInnovators] = useState([]);
+  const [innovators, setInnovators] = useState(false);
 
   useEffect(() => {
     async function getRegistrationData() {
@@ -30,7 +30,11 @@ function AdminInnovator() {
 
         const responseData = await response.json();
         const innovators = responseData.data;
-        setInnovators(innovators);
+        if (responseData.status === 200) {
+          setInnovators(innovators);
+        } else {
+          setInnovators([]);
+        }
       } catch (error) {
         // console.error("Error:".error);
       }
@@ -277,11 +281,9 @@ function AdminInnovator() {
               style={{ cursor: "pointer" }}
             />
           ) : row.status === "active" ? (
-            <AirplanemodeActiveSharpIcon
-              style={{ cursor: "pointer", color: "green" }}
-            />
+            <CheckIcon style={{ cursor: "pointer", color: "green" }} />
           ) : row.status === "inactive" ? (
-            <AirplanemodeInactiveSharpIcon
+            <ClearIcon
               onClick={() => handleInactive(row.id, row.email)}
               style={{ cursor: "pointer" }}
             />

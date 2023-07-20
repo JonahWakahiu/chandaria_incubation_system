@@ -35,7 +35,11 @@ function AdminNavbar() {
 
         const responseData = await response.json();
         const newReading = responseData.data;
-        setNotification(newReading);
+        if (responseData.status === 200) {
+          setNotification(newReading);
+        } else {
+          setNotification(0);
+        }
       } catch (error) {
         console.error("Error:".error);
       }
@@ -95,7 +99,9 @@ function AdminNavbar() {
                   style={{ color: "#FF7200 " }}
                 >
                   <span className="d-block fw-bold">Admin</span>
-                  <span className="d-block">{user && user.firstName}</span>
+                  <span className="d-block">
+                    {user && user.firstName} {user && user.lastName}
+                  </span>
                 </div>
               </div>
             </div>
@@ -119,7 +125,7 @@ function AdminNavbar() {
               <span className="ms-3">USERS</span>
             </p>
             <MenuItem
-              icon={<GiIcons.GiTechnoHeart />}
+              icon={<FaIcons.FaUsers />}
               component={<Link to="/admin/innovator" />}
             >
               Innovators

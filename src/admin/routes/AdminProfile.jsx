@@ -1,38 +1,162 @@
-import React from "react";
+import { useContext } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { stages, categories } from "../../data";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { UserContext } from "../../UserContext";
+import { ToastContainer, toast } from "react-toastify";
+import * as Yup from "yup";
 
 function AdminProfile() {
+  const { user, setUser } = useContext(UserContext);
+
+  const url =
+    "http://localhost/incubation_system_rest_api/Admin/profileUpdate.php";
+
+  async function sendProfileData(formData, actions) {
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        header: {
+          "Content-Type": "application/json",
+        },
+        body: formData,
+      });
+
+      const responseData = await response.json();
+      if (responseData.status === 202) {
+        toast.info(responseData.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      } else if (responseData.status === 200) {
+        toast.success(responseData.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      } else {
+        toast.warning(responseData.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      }
+    } catch (error) {
+      toast.error("Server connection problem!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  }
+
   return (
     <div className="container-fluid d-flex justify-content-center bg-body-secondary">
-      <div className="row w-75 border rounded mt-4 mb-5 px-3 bg-body-tertiary d-flex justify-content-between">
-        <div className="col-md-10 col-lg-9 col-xl-8 pb-2">
+      <div
+        className="row w-75 border rounded mt-4 mb-5 px-3 bg-body-tertiary d-flex justify-content-between"
+        style={{ height: "85vh" }}
+      >
+        <div className="col-12 pb-2 pt-3">
           <h5>General</h5>
           <p>Setup your general profile details</p>
           <Formik
             initialValues={{
+              photo: "",
               firstName: "",
               lastName: "",
               email: "",
               phoneNumber: "",
               nationalId: "",
-              incubationDate: "",
-              partnerNames: "",
-              innovationCategory: "",
-              innovationStage: "",
-              description: "",
+            }}
+            validationSchema={Yup.object().shape({
+              firstName: Yup.string().matches(
+                /^[a-zA-Z]{2,15}$/,
+                "Should only contains alphabets and 2 to 15 characters"
+              ),
+              lastName: Yup.string().matches(
+                /^[a-zA-Z]{2,20}$/,
+                "Should only contains alphabets and 2 to 20 characters"
+              ),
+              email: Yup.string().email("Invalid Email address"),
+              phoneNumber: Yup.string().matches(
+                /^0(1|7)[\d]{8}$/,
+                "Invalid phone number hint: 07/01"
+              ),
+              nationalId: Yup.string().matches(
+                /^[0-9]{8}$/,
+                "National Id must be 8 characters only"
+              ),
+            })}
+            onSubmit={(values) => {
+              const formData = new FormData();
+              Object.keys(values).forEach((key) => {
+                formData.append(key, values[key]);
+              });
+
+              for (let entry of formData.entries()) {
+                console.log(entry);
+              }
+
+              sendProfileData(formData);
             }}
           >
             {({ errors, touched, isSubmitting, values, setFieldValue }) => (
-              <Form className="row g-2">
+              <Form className="clearfix">
+                <section className="col-md-5 float-md-end mb-3">
+                  <h6 className="text-center w-50">Profile Picture</h6>
+                  <img
+                    src={user && user.photo}
+                    alt="user2"
+                    style={{
+                      // borderRadius: "50%",
+                      height: "150px",
+                      width: "150px",
+                      margin: "20px 60px",
+                    }}
+                  />
+                  <input
+                    type="file"
+                    name="photo"
+                    id="photo"
+                    className={`form-control w-75 ${
+                      errors.photo && touched.photo ? "input-error" : ""
+                    }`}
+                    onChange={(event) =>
+                      setFieldValue("photo", event.target.files[0])
+                    }
+                  />
+                  <span className="errors">
+                    <ErrorMessage name="photo" />
+                  </span>
+                </section>
+
                 {/* firstName */}
-                <div className="col-md-6">
+                <div className="col-md-6 mb-3">
                   <label htmlFor="firstName" className="form-label">
                     First Name<span className="text-danger ms-2">*</span>
                   </label>
                   <Field
+                    placeholder={user && user.firstName}
                     type="text"
                     name="firstName"
                     id="firstName"
@@ -45,11 +169,12 @@ function AdminProfile() {
                   </span>
                 </div>
                 {/* lastName */}
-                <div className="col-md-6">
+                <div className="col-md-6 mb-3">
                   <label htmlFor="lastName" className="form-label">
                     Last Name<span className="text-danger ms-2">*</span>
                   </label>
                   <Field
+                    placeholder={user && user.lastName}
                     type="text"
                     name="lastName"
                     id="lastName"
@@ -62,11 +187,12 @@ function AdminProfile() {
                   </span>
                 </div>
                 {/* email */}
-                <div className="col-md-6">
+                <div className="col-md-6 mb-3">
                   <label htmlFor="email" className="form-label">
                     Email<span className="text-danger ms-2">*</span>
                   </label>
                   <Field
+                    placeholder={user && user.email}
                     type="email"
                     name="email"
                     id="email"
@@ -80,11 +206,12 @@ function AdminProfile() {
                 </div>
 
                 {/* phone Number */}
-                <div className="col-md-6">
+                <div className="col-md-6 mb-3">
                   <label htmlFor="phoneNumber" className="form-label">
                     Phone Number<span className="text-danger ms-2">*</span>
                   </label>
                   <Field
+                    placeholder={user && user.phoneNumber}
                     type="text"
                     name="phoneNumber"
                     id="phoneNumber"
@@ -99,11 +226,12 @@ function AdminProfile() {
                   </span>
                 </div>
                 {/* national Id */}
-                <div className="col-md-6">
+                <div className="col-md-6 mb-3">
                   <label htmlFor="nationalId">
                     National Id<span className="text-danger ms-2">*</span>
                   </label>
                   <Field
+                    placeholder={user && user.nationalId}
                     type="text"
                     name="nationalId"
                     id="nationalId"
@@ -118,143 +246,28 @@ function AdminProfile() {
                   </span>
                 </div>
 
-                {/* incubation Date */}
-                <div className="col-md-6">
-                  <label htmlFor="incubationDate">
-                    IncubationDate<span className="text-danger ms-2">*</span>
-                  </label>
-                  <DatePicker
-                    id="incubationDate"
-                    className={`form-control ${
-                      errors.incubationDate && touched.incubationDate
-                        ? "input-error"
-                        : ""
-                    }`}
-                    autoComplete="off"
-                    onChange={(date) => setFieldValue("incubationDate", date)}
-                    selected={values.incubationDate}
-                    dateFormat="yyyy/MM/dd"
-                    maxDate={new Date()}
-                  />
-                  <span className="errors">
-                    <ErrorMessage name="incubationDate" />
-                  </span>
+                <div className="col-md-6 d-flex justify-content-center">
+                  <button type="submit" className="btn btn-success w-50">
+                    Update
+                  </button>
                 </div>
-
-                {/* names of key partner */}
-                <div className="col-md-6">
-                  <label htmlFor="partnerNames" className="form-label">
-                    Name of key partners / investors if any
-                  </label>
-                  <Field
-                    type="text"
-                    name="partnerNames"
-                    id="partnerNames"
-                    className={`form-control ${
-                      errors.partnerNames && touched.partnerNames
-                        ? "input-error"
-                        : ""
-                    }`}
-                  />
-                  <span className="errors">
-                    <ErrorMessage name="partnerNames" />
-                  </span>
-                </div>
-
-                {/* innovation Category */}
-                <div className="col-md-6">
-                  <label htmlFor="innovationCategory">
-                    Category of Your Innovation
-                    <span className="text-danger ms-2">*</span>
-                  </label>
-                  <Field
-                    as="select"
-                    name="innovationCategory"
-                    id="innovationCategory"
-                    className={`form-select ${
-                      errors.innovationCategory && touched.innovationCategory
-                        ? "input-error"
-                        : ""
-                    }`}
-                  >
-                    {categories.map((category) => (
-                      <option key={category.id} value={category.name}>
-                        {category.name}
-                      </option>
-                    ))}
-                  </Field>
-                  <span className="errors">
-                    <ErrorMessage name="innovationCategory" />
-                  </span>
-                </div>
-
-                {/* innovation stage */}
-                <div className="col-md-6">
-                  <label htmlFor="innovationStage">
-                    Stage of your Innovation
-                    <span className="text-danger ms-2">*</span>
-                  </label>
-                  <Field
-                    as="select"
-                    name="innovationStage"
-                    id="innovationStage"
-                    className={`form-select ${
-                      errors.innovationStage && touched.innovationStage
-                        ? "input-error"
-                        : ""
-                    }`}
-                  >
-                    {stages.map((stage) => (
-                      <option key={stage.id} value={stage.name}>
-                        {stage.name}
-                      </option>
-                    ))}
-                  </Field>
-                  <span className="errors">
-                    <ErrorMessage name="innovationStage" />
-                  </span>
-                </div>
-
-                {/* description */}
-                <div className="col-12">
-                  <label htmlFor="description" className="form-label">
-                    A brief description of your innovation. (not exceeding 250
-                    words)<span className="text-danger ms-2">*</span>
-                  </label>
-                  <Field
-                    style={{ height: "150px" }}
-                    as="textarea"
-                    name="description"
-                    id="description"
-                    className={`form-control ${
-                      errors.description && touched.description
-                        ? "input-error"
-                        : ""
-                    }`}
-                  />
-                </div>
-
-                <button type="submit" className="btn btn-success">
-                  Submit
-                </button>
               </Form>
             )}
           </Formik>
         </div>
-        <div className="col-md-3" style={{ marginTop: "100px" }}>
-          <h6 className="">Profile Picture</h6>
-          <img
-            src="/img/user22.jpg"
-            alt="user2"
-            style={{
-              borderRadius: "50%",
-              height: "150px",
-              width: "150px",
-              margin: "0 auto",
-            }}
-          />
-        </div>
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
   );
 }

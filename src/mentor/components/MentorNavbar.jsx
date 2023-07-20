@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Sidebar, Menu, MenuItem } from "react-pro-sidebar";
 import { Avatar, Stack, Badge } from "@mui/material";
 import SettingsIcon from "@mui/icons-material/Settings";
+import BackupTableIcon from "@mui/icons-material/BackupTable";
 import * as FaIcons from "react-icons/fa";
 import * as FcIcons from "react-icons/fc";
 import * as AiIcons from "react-icons/ai";
@@ -59,20 +60,8 @@ function MentorNavbar() {
               </div>
             </div>
             <MenuItem icon={<AiIcons.AiFillHome />}>Dashboard</MenuItem>
-            <p
-              className="ms-3 my-1 fw-bold border-bottom"
-              style={{ color: "#FF7200" }}
-            >
-              REPORTS
-            </p>
-            <MenuItem icon={<FaIcons.FaWpforms />}>Expectation Form</MenuItem>
-            <p
-              className="my-1 fw-bold border-bottom"
-              style={{ color: "#FF7200 " }}
-            >
-              <span className="ms-3">USER</span>
-            </p>
-            <MenuItem icon={<FaIcons.FaUser />}>Innovators</MenuItem>
+
+            <MenuItem icon={<FaIcons.FaUsers />}>Innovators</MenuItem>
             <p
               className="my-1 fw-bold border-bottom"
               style={{ color: "#FF7200 " }}
@@ -84,6 +73,12 @@ function MentorNavbar() {
               component={<Link to="/mentor/accelerationreport" />}
             >
               Innovation acceleration
+            </MenuItem>
+            <MenuItem
+              icon={<BackupTableIcon />}
+              component={<Link to="/mentor/expectation" />}
+            >
+              Incubate Expectation
             </MenuItem>
             <MenuItem
               icon={<FaIcons.FaUser />}

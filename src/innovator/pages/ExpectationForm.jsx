@@ -1,220 +1,213 @@
 import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { ToastContainer, toast } from "react-toastify";
-import { services } from "../../data";
+import { TextField, MenuItem } from "@mui/material";
+import { stages } from "../../data";
+import "../Innovator.css";
 
 function ExpectationForm() {
-  const url =
-    "http://localhost/incubation_system_rest_api/innovator/handleExpectationForm.php";
-
-  async function sendExpectationFormData(formData, actions) {
-    try {
-      const response = await fetch(url, {
-        method: "POST",
-        header: {
-          "Content-Type": "application/json",
-        },
-        body: formData,
-      });
-
-      const responseData = await response.json();
-      if (responseData.status === 202) {
-        toast.info(responseData.message, {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-      } else if (responseData.status === 200) {
-        actions.resetForm();
-        toast.success(responseData.message, {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-      } else {
-        toast.warning(responseData.message, {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-      }
-    } catch (error) {
-      toast.error("Server connection failed!", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-    }
-  }
-
   return (
     <div className="container-fluid bg-body-secondary">
-      <div className="row justify-content-around">
+      <div className="row justify-content-around pt-3" id="reports-wrapper">
         <div className="col-lg-7 border rounded p-3 bg-body-tertiary bg-danger">
           <Formik
             initialValues={{
-              firstName: "",
-              lastName: "",
-              phoneNumber: "",
-              email: "",
-              nationalId: "",
-              userExpectation: "",
-              stageEnterPricePyramid: "",
-              projectBasedService: "",
-            }}
-            onSubmit={(values, actions) => {
-              const formData = new FormData();
-              Object.keys(values).forEach((key) => {
-                formData.append(key, values[key]);
-              });
-
-              sendExpectationFormData(formData, actions);
-              // for (let entry of formData.entries()) {
-              //   console.log(entry);
-              // }
+              companyName: "",
+              proprietorsName: "",
+              mentorsName: "",
+              productDescription: "",
+              productionStage: "",
+              facilities: "",
+              businessPlan: "",
+              financialPlan: "",
+              taxReturns: "",
+              achievement: "",
+              challenges: "",
+              milestone: "",
             }}
           >
-            {({ errors, touched, isSubmitting }) => (
+            {(props) => (
               <Form className="row g-3">
-                <h6>Expectation Form</h6>
-                {/* firstName */}
+                <h3>Quarterly Progress Report</h3>
+
                 <div className="col-md-6">
-                  <label htmlFor="firstName" className="form-label">
-                    First Name
-                  </label>
                   <Field
                     type="text"
-                    name="firstName"
-                    id="firstName"
-                    className="form-control"
-                  />
-                </div>
-                {/* lastName */}
-                <div className="col-md-6">
-                  <label htmlFor="lastName" className="form-label">
-                    Last Name
-                  </label>
-                  <Field
-                    type="text"
-                    name="lastName"
-                    id="lastName"
-                    className="form-control"
-                  />
-                </div>
-                {/* phoneNumber */}
-                <div className="col-md-6">
-                  <label htmlFor="phoneNumber" className="form-label">
-                    Phone Number
-                  </label>
-                  <Field
-                    type="text"
-                    name="phoneNumber"
-                    id="phoneNumber"
-                    className="form-control"
-                  />
-                </div>
-                {/* email */}
-                <div className="col-md-6">
-                  <label htmlFor="email" className="form-label">
-                    Email
-                  </label>
-                  <Field
-                    type="text"
-                    name="email"
-                    id="email"
-                    className="form-control"
-                  />
-                </div>
-                {/* national Id */}
-                <div className="col-md-6">
-                  <label htmlFor="nationalId" className="form-label">
-                    National ID
-                  </label>
-                  <Field
-                    name="nationalId"
-                    type="text"
-                    className="form-control"
-                    id="nationalId"
-                  />
-                </div>
-                <div className="col-12">
-                  <label htmlFor="userExpectation" className="form-label">
-                    A brief outline of your expectations about the service
-                    package at the innovation center
-                  </label>
-                  <Field
-                    name="userExpectation"
-                    id="userExpectation"
-                    type="text"
-                    className="form-control"
+                    name="companyName"
+                    id="companyName"
+                    fullWidth
+                    label="Name of Company"
+                    variant="standard"
+                    as={TextField}
+                    helperText={<ErrorMessage name="companyName" />}
                   />
                 </div>
 
                 <div className="col-md-6">
-                  <label
-                    htmlFor="stageEnterPricePyramid"
-                    className="form-label"
-                  >
-                    Provide the stage of your innovation based on the enterprise
-                    pyramid
-                  </label>
                   <Field
-                    name="stageEnterPricePyramid"
-                    id="stageEnterPricePyramid"
-                    as="select"
-                    className="form-select"
-                  >
-                    <option value="Idea">Idea</option>
-                    <option value="Business plan">Business Plan</option>
-                    <option value="Revenue">Revenue</option>
-                    <option value="Profit">Profit</option>
-                    <option value="Scale">Scale</option>
-                  </Field>
+                    type="text"
+                    name="proprietorsName"
+                    label="Name of Proprietors"
+                    id="proprietorsName"
+                    fullWidth
+                    variant="standard"
+                    as={TextField}
+                    helperText={<ErrorMessage name="proprietorsName" />}
+                  />
                 </div>
+
                 <div className="col-md-6">
-                  <label htmlFor="projectBasedService">
-                    Provide a service that your project needs to be based on
-                  </label>
                   <Field
-                    as="select"
-                    name="projectBasedService"
-                    id="projectBasedService"
-                    className="form-select"
+                    type="text"
+                    name="mentorsName"
+                    id="mentorsName"
+                    label="Name of mentors"
+                    fullWidth
+                    variant="standard"
+                    as={TextField}
+                    helperText={<ErrorMessage name="mentorsName" />}
+                  />
+                </div>
+
+                <div className="col-md-6">
+                  <Field
+                    type="text"
+                    name="productDescription"
+                    id="productDescription"
+                    label="Description of Product"
+                    multiline
+                    maxRows={5}
+                    fullWidth
+                    variant="standard"
+                    as={TextField}
+                    helperText={<ErrorMessage name="productDescription" />}
+                  />
+                </div>
+
+                <div className="col-md-6">
+                  <Field
+                    type="text"
+                    name="productionStage"
+                    id="productionStage"
+                    label="Stage in Production"
+                    variant="standard"
+                    select
+                    fullWidth
+                    as={TextField}
+                    helperText={<ErrorMessage name="productDescription" />}
                   >
-                    {services.map((services) => (
-                      <option key={services.id} value={services.name}>
-                        {services.name}
-                      </option>
+                    {stages.map((stages) => (
+                      <MenuItem key={stages.id} value={stages.name}>
+                        {stages.name}
+                      </MenuItem>
                     ))}
                   </Field>
                 </div>
 
+                <div className="col-md-6">
+                  <Field
+                    type="text"
+                    name="facilities"
+                    id="facilities"
+                    label="Facilities"
+                    fullWidth
+                    variant="standard"
+                    as={TextField}
+                    helperText={<ErrorMessage name="facilities" />}
+                  />
+                </div>
+
+                <div className="col-md-6">
+                  <label htmlFor="financialPlan" className="form-label">
+                    Financial Plan
+                  </label>
+
+                  <Field
+                    type="file"
+                    name="financialPlan"
+                    id="financialPlan"
+                    variant="standard"
+                    as={TextField}
+                    helperText={<ErrorMessage name="financialPlan" />}
+                  />
+                </div>
+
+                <div className="col-md-6">
+                  <label htmlFor="texReturns" className="form-label">
+                    Tax Returns
+                  </label>
+
+                  <Field
+                    type="file"
+                    name="taxReturns"
+                    id="taxReturns"
+                    variant="standard"
+                    as={TextField}
+                    helperText={<ErrorMessage name="taxReturns" />}
+                  />
+                </div>
+                <div className="col-md-6">
+                  <label htmlFor="nusinessPlan" className="form-label">
+                    Business Plan
+                  </label>
+
+                  <Field
+                    type="file"
+                    name="businessPlan"
+                    id="businessPlan"
+                    variant="standard"
+                    as={TextField}
+                    helperText={<ErrorMessage name="businessPlan" />}
+                  />
+                </div>
+
+                <h6>Incubate's Feedback</h6>
+
+                <div className="col-md-6">
+                  <Field
+                    label="Achievements"
+                    variant="standard"
+                    as={TextField}
+                    helperText={<ErrorMessage name="achievement" />}
+                    type="text"
+                    multiline
+                    maxRows={5}
+                    fullWidth
+                    name="achievement"
+                    id="achievement"
+                  />
+                </div>
+                <div className="col-md-6">
+                  <Field
+                    type="text"
+                    name="challenges"
+                    id="challenges"
+                    label="Challenges"
+                    multiline
+                    maxRows={5}
+                    fullWidth
+                    variant="standard"
+                    as={TextField}
+                    helperText={<ErrorMessage name="challenges" />}
+                  />
+                </div>
+                <div className="col-md-6">
+                  <Field
+                    type="text"
+                    name="milestone"
+                    label="Milestone"
+                    id="milestone"
+                    multiline
+                    maxRows={5}
+                    fullWidth
+                    variant="standard"
+                    as={TextField}
+                    helperText={<ErrorMessage name="milestone" />}
+                  />
+                </div>
+
                 <div className="col-12 d-flex justify-content-center">
-                  <button
-                    disabled={isSubmitting}
-                    type="submit"
-                    className="btn btn-success w-50"
-                  >
+                  <button className="btn btn-success w-50" type="submit">
                     Submit
                   </button>
                 </div>
@@ -245,98 +238,45 @@ function ExpectationForm() {
               {({ errors, touched }) => (
                 <Form className="row g-2 p-3 border rounded bg-body-tertiary">
                   <h6>Innovation tracking form</h6>
-                  <label htmlFor="innovationStage" className="form-label">
-                    Innovation Stage
-                  </label>
-                  <Field
-                    type="text"
-                    name="innovationStage"
-                    id="innovationStage"
-                    className="form-control"
-                  />
 
-                  <label htmlFor="userMVP" className="form-label">
-                    Do you have a minimum viable product (MVP)?
-                  </label>
-                  <Field
-                    name="userMVP"
-                    type="text"
-                    id="userMVP"
-                    className="form-control"
-                  />
-                  <label htmlFor="commercialized" className="form-label">
-                    is the innovation Commercialized
-                  </label>
-                  <Field
-                    type="text"
-                    name="commercialized"
-                    id="commercialized"
-                    className="form-control"
-                  />
+                  <div className="col-12">
+                    <Field
+                      as={TextField}
+                      variant="standard"
+                      type="text"
+                      fullWidth
+                      name="innovationStage"
+                      id="innovationStage"
+                      label="Innovation Stage"
+                      helperText={<ErrorMessage name="firstName" />}
+                    />
+                  </div>
+
+                  <div className="col-12">
+                    <Field
+                      name="userMVP"
+                      type="text"
+                      id="userMVP"
+                      fullWidth
+                      label="Do you have a minimum viable product (MVP)"
+                      as={TextField}
+                      variant="standard"
+                    />
+                  </div>
+                  <div className="col-12">
+                    <Field
+                      type="text"
+                      name="commercialized"
+                      id="commercialized"
+                      as={TextField}
+                      variant="standard"
+                      fullWidth
+                      label="Is the Innovation Commercialized?"
+                    />
+                  </div>
                   <button type="submit" className="btn btn-success">
                     Submit
                   </button>
-                </Form>
-              )}
-            </Formik>
-          </article>
-          <article>
-            <Formik
-              initialValues={{
-                threeMonthsAchievement: "",
-                challengesFaced: "",
-                milestoneAchieved: "",
-              }}
-              onSubmit={(values, actions) => {
-                const formData = new FormData();
-                Object.keys(values).forEach((key) => {
-                  formData.append(key, values[key]);
-                });
-
-                // sendInputData(formData, actions);
-                for (let entry of formData.entries()) {
-                  console.log(entry);
-                }
-              }}
-            >
-              {({ errors, touched }) => (
-                <Form className="row g-2 p-3 border rounded bg-body-tertiary">
-                  <h6>Quartely Milestone Feedback</h6>
-                  <label
-                    htmlFor="threeMonthsAchievement"
-                    className="form-label"
-                  >
-                    Achievements over the last 3 months
-                  </label>
-                  <Field
-                    type="text"
-                    name="threeMonthsAchievement"
-                    id="threeMonthsAchievement"
-                    className="form-control"
-                  />
-                  <label htmlFor="challengesFaced" className="form-label">
-                    Challenges faced during the course of the quarter
-                  </label>
-                  <Field
-                    type="text"
-                    name="challengesFaced"
-                    id="challengesFaced"
-                    className="form-control"
-                  />
-                  <label htmlFor="milestoneAchieved" className="form-label">
-                    Milestone Achieved
-                  </label>
-                  <Field
-                    type="text"
-                    name="milestoneAchieved"
-                    id="milestoneAchieved"
-                    className="form-control"
-                  />
-                  <div className="col-12">
-                    <button type="submit" className="btn btn-success w-50">
-                      Submit
-                    </button>
-                  </div>
                 </Form>
               )}
             </Formik>

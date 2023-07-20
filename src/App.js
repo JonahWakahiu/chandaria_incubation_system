@@ -23,6 +23,7 @@ import { UserContext } from "./UserContext";
 import AccelerationReport from "./mentor/pages/AccelerationReport";
 import MentorDashboard from "./mentor/pages/MentorDashboard";
 import MentorProfile from "./mentor/pages/MentorProfile";
+import IncubateExpectation from "./mentor/pages/IncubateExpectation";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -54,6 +55,7 @@ function App() {
           <Route path="mentor" element={<MentorNavbar />}>
             <Route index element={<MentorDashboard />} />
             <Route path="accelerationreport" element={<AccelerationReport />} />
+            <Route path="expectation" element={<IncubateExpectation />} />
             <Route path="profile" element={<MentorProfile />} />
           </Route>
 

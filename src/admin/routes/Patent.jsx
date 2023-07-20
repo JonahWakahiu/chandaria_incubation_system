@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { ToastContainer, toast } from "react-toastify";
-import { DataGrid, GridToolbar, GridValueGetterParams } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridToolbarContainer,
+  GridToolbarExport,
+} from "@mui/x-data-grid";
 
 const url =
   "http://localhost/incubation_system_rest_api/Admin/handlePatent.php";
@@ -66,7 +70,7 @@ async function sendPatentData(formData, actions) {
 }
 
 function Patent() {
-  const [patents, setPatents] = useState();
+  const [patents, setPatents] = useState(false);
 
   // get mentors on page load
   useEffect(() => {
@@ -84,7 +88,11 @@ function Patent() {
 
         const responseData = await response.json();
         const patents = responseData.data;
-        setPatents(patents);
+        if (responseData.status === 200) {
+          setPatents(patents);
+        } else {
+          setPatents([]);
+        }
       } catch (error) {
         // console.error("Error:".error);
       }
@@ -107,6 +115,14 @@ function Patent() {
     { field: "patentOwner", headerName: "Patent Owner" },
     { field: "patentNumber", headerName: "Patent Number" },
   ];
+
+  function CustomToolbar() {
+    return (
+      <GridToolbarContainer>
+        <GridToolbarExport printOptions={{ disableToolbarButton: true }} />
+      </GridToolbarContainer>
+    );
+  }
   return (
     <div className="container-fluid">
       <ToastContainer
@@ -123,21 +139,19 @@ function Patent() {
       />
       <div className="row vh-100">
         <div className="col-12 col-md-8 me-2">
-          {patents && (
-            <DataGrid
-              sx={{
-                boxShadow: 2,
-                border: 2,
-                borderColor: "primary.light",
-                "& .MuiDataGrid-cell:hover": {
-                  color: "primary.main",
-                },
-              }}
-              rows={patents}
-              columns={columns}
-              slots={{ toolbar: GridToolbar }}
-            />
-          )}
+          <DataGrid
+            sx={{
+              boxShadow: 2,
+              border: 2,
+              borderColor: "primary.light",
+              "& .MuiDataGrid-cell:hover": {
+                color: "primary.main",
+              },
+            }}
+            rows={patents}
+            columns={columns}
+            slots={{ toolbar: CustomToolbar }}
+          />
         </div>
         <div className="col border border-success ">
           <Formik

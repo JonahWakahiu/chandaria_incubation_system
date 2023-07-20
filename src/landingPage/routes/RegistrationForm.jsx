@@ -113,7 +113,7 @@ function RegistrationForm() {
               .email("Invalid Email address")
               .required("Required"),
             phoneNumber: Yup.string()
-              // .matches(/^0(1|7)[\d]{8}$/, "Invalid phone number hint: 07/01")
+              .matches(/^0(1|7)[\d]{8}$/, "Invalid phone number hint: 07/01")
               .required("Required"),
             nationalId: Yup.string()
               .matches(/^[0-9]{8}$/, "National Id must be 8 characters only")
@@ -173,9 +173,9 @@ function RegistrationForm() {
             });
 
             sendInputData(formData, actions);
-            // for (let entry of formData.entries()) {
-            //   console.log(entry);
-            // }
+            for (let entry of formData.entries()) {
+              console.log(entry);
+            }
           }}
         >
           {({ errors, touched, isSubmitting, values, setFieldValue }) => (
@@ -529,7 +529,7 @@ function RegistrationForm() {
                   <ErrorMessage name="innovationStage" />
                 </span>
               </div>
-              {/* <section>
+              <section>
                 <ReCAPTCHA
                   name="ReCAPTCHA"
                   sitekey="6Lckv7AmAAAAAK9AlfL0fGpqN-2r3jdckUghvx_L"
@@ -539,7 +539,7 @@ function RegistrationForm() {
                 <span className="errors">
                   <ErrorMessage name="ReCAPTCHA" />
                 </span>
-              </section> */}
+              </section>
               <span className="col-12 d-flex justify-content-center">
                 <button
                   type="submit"

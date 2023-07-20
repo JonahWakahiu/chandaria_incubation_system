@@ -96,7 +96,7 @@ function AdminDashboard() {
         </div>
       </div>
 
-      <div className="row ms-2 me-5 my-3 g-2">
+      <div className="row ms-2 me-5 my-3 g-2 justify-between">
         <div
           className="col-lg-7 shadow border rounded me-2"
           style={{ height: "60vh" }}
@@ -184,10 +184,14 @@ function AdminDashboard() {
           />
         </div>
         {/* piechart */}
-        <div className="col shadow border rounded" style={{ height: "60vh" }}>
+        <div
+          className="col-lg-4 shadow border rounded"
+          style={{ height: "60vh" }}
+        >
           <ResponsivePie
             data={pieData}
-            margin={{ top: 40, right: 120, bottom: 80, left: 100 }}
+            margin={{ top: 40, right: 130, bottom: 80, left: 110 }}
+            padding={{ right: 50 }}
             startAngle={0}
             activeOuterRadiusOffset={8}
             colors={{ scheme: "paired" }}

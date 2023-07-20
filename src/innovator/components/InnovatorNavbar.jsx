@@ -6,6 +6,7 @@ import * as FaIcons from "react-icons/fa";
 import * as AiIcons from "react-icons/ai";
 import * as BiIcons from "react-icons/bi";
 import { useState, useContext } from "react";
+import FeedIcon from "@mui/icons-material/Feed";
 import "../Innovator.css";
 import { UserContext } from "../../UserContext";
 
@@ -19,6 +20,7 @@ function InnovatorNavbar() {
       id="wrapper"
     >
       <Sidebar
+        className="sticky-top"
         backgroundColor="#0f416f"
         width="230px"
         collapsed={collapsed}
@@ -67,7 +69,7 @@ function InnovatorNavbar() {
 
           <MenuItem
             component={<Link to="/innovator/expectation" />}
-            icon={<BiIcons.BiChart />}
+            icon={<FeedIcon />}
           >
             Reports
           </MenuItem>

@@ -67,7 +67,7 @@ async function sendMentorData(formData, actions) {
 }
 
 function AdminMentor() {
-  const [mentors, setMentors] = useState([]);
+  const [mentors, setMentors] = useState("");
 
   // get mentors on page load
   useEffect(() => {
@@ -85,7 +85,11 @@ function AdminMentor() {
 
         const responseData = await response.json();
         const mentors = responseData.data;
-        setMentors(mentors);
+        if (responseData.status === 200) {
+          setMentors(mentors);
+        } else {
+          setMentors([]);
+        }
       } catch (error) {
         // console.error("Error:".error);
       }
@@ -136,6 +140,7 @@ function AdminMentor() {
             columns={columns}
             slots={{ toolbar: GridToolbar }}
           />
+          {mentors.length === 0 && <p>No mentor available.</p>}
         </div>
 
         <div className="col align-items-center">

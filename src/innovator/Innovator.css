@@ -6,3 +6,18 @@
   object-fit: center;
   cursor: pointer;
 }
+
+#firstName-helper-text,
+#lastName-helper-text,
+#phoneNumber-helper-text,
+#email-helper-text,
+#nationalId-helper-text,
+#userExpectation-helper-text,
+#stageEnterPricePyramid-helper-text,
+#projectBasedService-helper-text {
+  color: red;
+}
+
+#report-wrapper {
+  height: 87vh;
+}
