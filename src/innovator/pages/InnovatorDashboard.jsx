@@ -7,6 +7,16 @@ import { ToastContainer, toast } from "react-toastify";
 import * as GiIcons from "react-icons/gi";
 import * as Yup from "yup";
 import {
+  BarChart,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+  Bar,
+  ResponsiveContainer,
+} from "recharts";
+import {
   MenuItem,
   Paper,
   Avatar,
@@ -89,99 +99,97 @@ function InnovatorDashboard(props) {
         pauseOnHover
         theme="light"
       />
-      <div className="row justify-content-around">
-        <div className="col-lg-6 ">
-          <div className="row justify-content-around">
-            <div
-              className="border rounded shadow me-2 col"
-              style={{ height: "150px" }}
-            >
-              <h6>Mentor</h6>
-              <Avatar alt="user13" src="/img/user13.jpg" />
+      <div className="row justify-content-around p-2">
+        <div
+          className="border rounded shadow col bg-light mx-2"
+          style={{ height: "150px" }}
+        >
+          <h6>Tasks</h6>
+        </div>
 
-              <br />
-              <a className="mb-0" href="">
-                Profile
-              </a>
-            </div>
-            <div
-              className="border rounded shadow me-2 col"
-              style={{ height: "150px" }}
-            >
-              <h6>Task Completed</h6>
-
-              <br />
-              {/* <a className="mb-0" href="">
-                Profile
-              </a> */}
-            </div>
-
-            {/* <div
-              className="border rounded shadow me-2 col-md-3"
-              style={{ height: "150px" }}
-            >
-              <h6>Mentor</h6>
-              John Doe <br />
-              <a className="mb-0" href="">
-                Profile
-              </a>
-            </div> */}
-          </div>
-          <div className="row mt-4 justify-content-around">
-            <div className="card col-12">
-              <div className="card-header">Progress per form</div>
-              <div className="card-body">
-                <p>Expectation Form</p>
-                <ProgressBar completed={60} maxCompleted={100} />
-                <p>Quarterly Progress Report</p>
-                <ProgressBar completed={100} maxCompleted={100} />
-                <p>Innovation Tracking form</p>
-                <ProgressBar completed={20} maxCompleted={100} />
-                <p>Quartely MileStone Feedback</p>
-                <ProgressBar completed={0} maxCompleted={100} />
-                <p>Needs assessment form</p>
-                <ProgressBar completed={35} maxCompleted={100} />
-              </div>
-            </div>
+        <div
+          className="border rounded shadow me-2 col bg-light"
+          style={{ height: "150px" }}
+        >
+          <h6>Completed</h6>
+          <div className="mt-auto">
+            <ProgressBar completed={60} maxCompleted={100} />
           </div>
         </div>
-        <div className="col-lg-5 mt-3 mb-2 py-2 pt-3 me-3 shadow border">
+
+        <div
+          className="border rounded shadow col me-2 bg-light"
+          style={{ height: "150px" }}
+        >
+          <h6>Team Members</h6>
+        </div>
+
+        <div
+          className="border rounded shadow col me-2 bg-light"
+          style={{ height: "150px" }}
+        >
+          <h6>Mentor</h6>
+          <Avatar alt="user13" src="/img/user13.jpg" />
+
+          <br />
+          <a className="mb-0" href="">
+            Profile
+          </a>
+        </div>
+      </div>
+      <div className="row justify-content-between px-3 py-2">
+        <div className="card col me-2 bg-light">
+          <div className="card-header">Weekly Performance Report</div>
+          <div className="card-body">
+            <ResponsiveContainer width={"100%"} height={450}>
+              <BarChart data={data}>
+                <CartesianGrid strokeDasharray="2 2" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="uv" fill="#82ca9d" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+        <div className="col-lg-5 shadow border bg-light">
           <Formik
             initialValues={{
-              firstname: user ? user.firstName : "",
-              lastname: user ? user.lastName : "",
-              phonenumber: user ? user.phoneNumber : "",
-              gmail: user ? user.email : "",
-              nationalid: user ? user.nationalId : "",
-              userexpectation: "",
-              stageenterpricePyramid: "",
-              projectbasedService: "",
+              firstName: user ? user.firstName : "",
+              lastName: user ? user.lastName : "",
+              phoneNumber: user ? user.phoneNumber : "",
+              email: user ? user.email : "",
+              nationalId: user ? user.nationalId : "",
+              userExpectation: "",
+              stageEnterPricePyramid: "",
+              projectBasedService: "",
             }}
             validationSchema={Yup.object().shape({
-              firstname: Yup.string()
+              firstName: Yup.string()
                 .matches(
                   /^[a-zA-Z]{2,15}$/,
                   "Should only contains alphabets and 2 to 15 characters"
                 )
                 .required("Required"),
-              lastname: Yup.string()
+              lastName: Yup.string()
                 .matches(
                   /^[a-zA-Z]{2,20}$/,
                   "Should only contains alphabets and 2 to 20 characters"
                 )
                 .required("Required"),
-              gmail: Yup.string()
+              email: Yup.string()
                 .email("Invalid Email address")
                 .required("Required"),
-              phonenumber: Yup.string()
+              phoneNumber: Yup.string()
                 .matches(/^0(1|7)[\d]{8}$/, "Invalid phone number hint: 07/01")
                 .required("Required"),
-              nationalid: Yup.string()
+              nationalId: Yup.string()
                 .matches(/^[0-9]{8}$/, "National Id must be 8 characters only")
                 .required("Required"),
-              userexpectation: Yup.string().required("Required"),
-              stageenterpricePyramid: Yup.string().required("Required"),
-              projectbasedService: Yup.string().required("Required"),
+              userExpectation: Yup.string().required("Required"),
+              stageEnterPricePyramid: Yup.string().required("Required"),
+              projectBasedService: Yup.string().required("Required"),
             })}
             onSubmit={(values, actions) => {
               const formData = new FormData();
@@ -200,75 +208,91 @@ function InnovatorDashboard(props) {
                 <h6>Expectation Form</h6>
                 {/* firstName */}
                 <div className="col-md-6">
-                  <Field name="firstname">
+                  <Field name="firstName">
                     {({ field }) => (
                       <TextField
                         {...field}
                         variant="standard"
                         fullWidth
-                        helperText={<ErrorMessage name="firstname " />}
+                        helperText={
+                          <span className="errors">
+                            <ErrorMessage name="firstName " />
+                          </span>
+                        }
                         label="First Name"
-                        defaultValue={user && user.firstName}
                       />
                     )}
                   </Field>
                 </div>
                 {/* lastName */}
                 <div className="col-md-6">
-                  <Field name="lastname">
+                  <Field name="lastName">
                     {({ field }) => (
                       <TextField
-                        defaultValue={user && user.lastName}
                         {...field}
                         variant="standard"
                         label="Last Name"
                         fullWidth
-                        helperText={<ErrorMessage name="lastname" />}
+                        helperText={
+                          <span className="errors">
+                            <ErrorMessage name="lastName" />
+                          </span>
+                        }
                       />
                     )}
                   </Field>
                 </div>
                 {/* phoneNumber */}
                 <div className="col-md-6">
-                  <Field name="phonenumber">
+                  <Field name="phoneNumber">
                     {({ field }) => (
                       <TextField
-                        defaultValue={user && user.phoneNumber}
                         variant="standard"
                         label="Phone Number"
                         {...field}
                         fullWidth
-                        helperText={<ErrorMessage name="phonenumber" />}
+                        helperText={
+                          <span className="errors">
+                            <ErrorMessage name="phoneNumber" />
+                          </span>
+                        }
                       />
                     )}
                   </Field>
                 </div>
                 {/* email */}
                 <div className="col-md-6">
-                  <Field name="gmail">
+                  <Field name="email">
                     {({ field }) => (
                       <TextField
-                        defaultValue={user && user.email}
+                        disabled
                         variant="standard"
                         label="Email"
                         {...field}
                         fullWidth
-                        helperText={<ErrorMessage name="gmail" />}
+                        helperText={
+                          <span className="errors">
+                            <ErrorMessage name="email" />
+                          </span>
+                        }
                       />
                     )}
                   </Field>
                 </div>
                 {/* national Id */}
                 <div className="col-md-6">
-                  <Field name="nationalid">
+                  <Field name="nationalId">
                     {({ field }) => (
                       <TextField
-                        defaultValue={user && user.nationalId}
                         {...field}
                         variant="standard"
                         label="National Id"
                         fullWidth
-                        helperText={<ErrorMessage name="nationalid" />}
+                        helperText={
+                          <span className="errors">
+                            <ErrorMessage name="nationalId" />
+                          </span>
+                        }
                       />
                     )}
                   </Field>
@@ -278,7 +302,7 @@ function InnovatorDashboard(props) {
                     A brief outline of your expectations about the service
                     package at the innovation center
                   </label>
-                  <Field name="userexpectation">
+                  <Field name="userExpectation">
                     {({ field }) => (
                       <TextField
                         {...field}
@@ -286,14 +310,18 @@ function InnovatorDashboard(props) {
                         maxRows={5}
                         variant="standard"
                         fullWidth
-                        helperText={<ErrorMessage name="userexpectation" />}
+                        helperText={
+                          <span className="errors">
+                            <ErrorMessage name="userExpectation" />
+                          </span>
+                        }
                       />
                     )}
                   </Field>
                 </div>
 
                 <div className="col-12">
-                  <Field name="stageenterpricePyramid">
+                  <Field name="stageEnterPricePyramid">
                     {({ field }) => (
                       <FormControl variant="standard" fullWidth>
                         <InputLabel>
@@ -315,13 +343,16 @@ function InnovatorDashboard(props) {
                           <MenuItem value="Profit">Profit</MenuItem>
                           <MenuItem value="Scale">Scale</MenuItem>
                         </Select>
+                        <span className="errors">
+                          <ErrorMessage name="stageEnterPricePyramid" />
+                        </span>
                       </FormControl>
                     )}
                   </Field>
                 </div>
 
                 <div className="col-12">
-                  <Field name="projectbasedService">
+                  <Field name="projectBasedService">
                     {({ field }) => (
                       <FormControl variant="standard" fullWidth>
                         <InputLabel>
@@ -341,6 +372,9 @@ function InnovatorDashboard(props) {
                             </MenuItem>
                           ))}
                         </Select>
+                        <span className="errors">
+                          <ErrorMessage name="projectBasedService" />
+                        </span>
                       </FormControl>
                     )}
                   </Field>
@@ -361,3 +395,34 @@ function InnovatorDashboard(props) {
 }
 
 export default InnovatorDashboard;
+
+const data = [
+  {
+    name: "Monday",
+    uv: 5,
+  },
+  {
+    name: "Tuesday",
+    uv: 6.5,
+  },
+  {
+    name: "Wednesday",
+    uv: 7,
+  },
+  {
+    name: "Thursday",
+    uv: 4,
+  },
+  {
+    name: "Friday",
+    uv: 7,
+  },
+  {
+    name: "Saturday",
+    uv: 10.2,
+  },
+  {
+    name: "Sunday",
+    uv: 9,
+  },
+];

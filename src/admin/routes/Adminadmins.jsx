@@ -42,6 +42,7 @@ async function sendAdminData(formData, actions) {
         theme: "light",
       });
     } else {
+      actions.setSubmitting(false);
       toast.warning(responseData.message, {
         position: "top-right",
         autoClose: 5000,
@@ -121,7 +122,7 @@ function Adminadmins() {
         pauseOnHover
         theme="light"
       />
-      <div className="row vh-100">
+      <div className="row" style={{ minHeight: "88vh" }}>
         <div className="col-12 col-lg-8 me-2 ">
           <DataGrid
             sx={{

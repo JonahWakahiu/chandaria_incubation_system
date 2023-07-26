@@ -20,7 +20,7 @@ function InnovatorNavbar() {
       id="wrapper"
     >
       <Sidebar
-        className="sticky-top"
+        id="fixed-sidebar"
         backgroundColor="#0f416f"
         width="230px"
         collapsed={collapsed}
@@ -86,10 +86,12 @@ function InnovatorNavbar() {
           >
             Profile
           </MenuItem>
-          <MenuItem icon={<BiIcons.BiLogOut />}>Logout</MenuItem>
+          <MenuItem icon={<BiIcons.BiLogOut />} component={<Link to="/" />}>
+            Logout
+          </MenuItem>
         </Menu>
       </Sidebar>
-      <main className="w-100">
+      <main className="w-100 bg-body-secondary">
         <nav
           className="navbar navbar-expand-lg p-0 m-0 bg-light sticky-top border-bottom"
           id="navbar"

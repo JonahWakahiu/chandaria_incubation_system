@@ -1,8 +1,20 @@
-import React, { useState, useEffect, PureComponent } from "react";
-import { Card } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+
 import { ResponsiveBar } from "@nivo/bar";
 import { ResponsivePie } from "@nivo/pie";
+import {
+  BarChart,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+  Bar,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+} from "recharts";
 
 import "../components/Navbar.css";
 
@@ -48,17 +60,17 @@ function AdminDashboard() {
   }, []);
 
   return (
-    <div className="container-fluid">
+    <div className="container-fluid mt-0">
       <div className="row ms-2 me-5 my-3">
         <div
-          className="col-md-4 col-lg-2 border rounded shadow me-2"
+          className="col-md-4 col-lg-2 border rounded bg-light shadow me-2"
           style={{ height: "150px" }}
         >
           <h6>Incubate Registered</h6>
           {dashboard && dashboard.registeredIncubate}
         </div>
         <div
-          className="col-md-4 col-lg-2 border rounded shadow me-2"
+          className="col-md-4 col-lg-2 border rounded bg-light shadow me-2"
           style={{ height: "150px" }}
         >
           <h6>Ku Students</h6>
@@ -67,28 +79,28 @@ function AdminDashboard() {
           {dashboard && dashboard.nonKuStudent}
         </div>
         <div
-          className="col-md-4 col-lg-2 border rounded me-2 shadow"
+          className="col-md-4 col-lg-2 border rounded bg-light me-2 shadow"
           style={{ height: "150px" }}
         >
           <h6>mentors</h6>
           {dashboard && dashboard.mentors}
         </div>
         <div
-          className="col-md-4 col-lg-2 border rounded me-2 shadow"
+          className="col-md-4 col-lg-2 border rounded me-2 shadow bg-light"
           style={{ height: "150px" }}
         >
           <h6>Registered companies</h6>
           {dashboard && dashboard.registeredCompanies}
         </div>
         <div
-          className="col-md-4 col-lg-2 border rounded rounded me-2 shadow"
+          className="col-md-4 col-lg-2 border rounded rounded me-2 shadow bg-light"
           style={{ height: "150px" }}
         >
           <h6>Commercialized companies</h6>
           {dashboard && dashboard.commercializedCompanies}
         </div>
         <div
-          className="col-md-4 col-lg border rounded me-2 shadow"
+          className="col-md-4 col-lg border rounded me-2 shadow bg-light"
           style={{ height: "150px" }}
         >
           <h6>Patent filed</h6>
@@ -97,139 +109,52 @@ function AdminDashboard() {
       </div>
 
       <div className="row ms-2 me-5 my-3 g-2 justify-between">
-        <div
-          className="col-lg-7 shadow border rounded me-2"
-          style={{ height: "60vh" }}
-        >
-          <ResponsiveBar
-            data={graphData}
-            keys={[
-              "Business and Professional Services",
-              "Information and Communication Technology",
-              "Marketing and Communication",
-              "Manufacturing and Construction",
-              "Transport and logistics",
-              "Bio and Nano-Technology",
-              "Health and Nutrition",
-              "Green and ecological business",
-              "Tourism and eco-tourism",
-              "Fine and Performing Arts",
-              "Sports, Leisure and Entertainment",
-              "Water and Sanitation",
-              "Energy",
-              "Media and Entertainment",
-            ]}
-            indexBy="country"
-            margin={{ top: 50, right: 270, bottom: 50, left: 60 }}
-            padding={0.25}
-            innerPadding={2}
-            groupMode="grouped"
-            valueScale={{ type: "linear" }}
-            indexScale={{ type: "band", round: true }}
-            colors={{ scheme: "paired" }}
-            borderColor={{
-              from: "color",
-              modifiers: [["darker", 1.6]],
-            }}
-            axisTop={null}
-            axisRight={null}
-            axisBottom={{
-              tickSize: 5,
-              tickPadding: 5,
-              tickRotation: 0,
-
-              legendPosition: "middle",
-              legendOffset: 32,
-            }}
-            axisLeft={{
-              tickSize: 5,
-              tickPadding: 5,
-              tickRotation: 0,
-              legend: "Number in each Category",
-              legendPosition: "middle",
-              legendOffset: -40,
-            }}
-            labelSkipWidth={12}
-            labelSkipHeight={12}
-            labelTextColor={{
-              from: "color",
-              modifiers: [["darker", 1.6]],
-            }}
-            legends={[
-              {
-                dataFrom: "keys",
-                anchor: "bottom-right",
-                direction: "column",
-                justify: false,
-                translateX: 120,
-                translateY: 0,
-                itemsSpacing: 2,
-                itemWidth: 100,
-                itemHeight: 20,
-                itemDirection: "left-to-right",
-                itemOpacity: 0.85,
-                symbolSize: 20,
-                effects: [
-                  {
-                    on: "hover",
-                    style: {
-                      itemOpacity: 1,
-                    },
-                  },
-                ],
-              },
-            ]}
-            role="application"
-            ariaLabel="innovation Category"
-          />
+        <div className="card col-lg-8 me-2">
+          <div className="card-header">Innovation Category</div>
+          <div className="card-body">
+            <ResponsiveContainer width={"100%"} height={450}>
+              <BarChart data={graphData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="count">
+                  {graphData.map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={colors[index % colors.length]}
+                    />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
         </div>
         {/* piechart */}
-        <div
-          className="col-lg-4 shadow border rounded"
-          style={{ height: "60vh" }}
-        >
-          <ResponsivePie
-            data={pieData}
-            margin={{ top: 40, right: 130, bottom: 80, left: 110 }}
-            padding={{ right: 50 }}
-            startAngle={0}
-            activeOuterRadiusOffset={8}
-            colors={{ scheme: "paired" }}
-            borderWidth={1}
-            borderColor={{
-              from: "color",
-              modifiers: [["darker", 0.2]],
-            }}
-            arcLinkLabelsSkipAngle={10}
-            arcLinkLabelsTextColor="#333333"
-            arcLinkLabelsThickness={2}
-            arcLinkLabelsColor={{ from: "color" }}
-            arcLabelsSkipAngle={10}
-            arcLabelsTextColor={{
-              from: "color",
-              modifiers: [["darker", 2]],
-            }}
-            defs={[
-              {
-                id: "dots",
-                type: "patternDots",
-                background: "inherit",
-                color: "rgba(255, 255, 255, 0.3)",
-                size: 4,
-                padding: 1,
-                stagger: true,
-              },
-              {
-                id: "lines",
-                type: "patternLines",
-                background: "inherit",
-                color: "rgba(255, 255, 255, 0.3)",
-                rotation: -45,
-                lineWidth: 6,
-                spacing: 10,
-              },
-            ]}
-          />
+        <div className="card col">
+          <div className="card-header">Innovation per Stage</div>
+          <div className="card-body">
+            <ResponsiveContainer>
+              <PieChart width={730} height={250}>
+                <Pie
+                  data={pieData}
+                  dataKey="value"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={80}
+                  outerRadius={120}
+                  fill="#8884d8"
+                >
+                  {pieData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={colors[index]} />
+                  ))}
+                </Pie>
+                <Tooltip />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
         </div>
       </div>
     </div>
@@ -237,3 +162,11 @@ function AdminDashboard() {
 }
 
 export default AdminDashboard;
+const colors = [
+  "#0088FE",
+  "#00C49F",
+  "#FFBB28",
+  "#FF8042",
+  "#AF19FF",
+  "#FF19AF",
+];

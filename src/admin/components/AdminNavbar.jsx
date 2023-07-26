@@ -1,8 +1,11 @@
 import { Link, Outlet } from "react-router-dom";
 import { useState, useEffect, useContext } from "react";
-import CircularProgress from "@mui/material/CircularProgress";
-import { Avatar, Stack, Badge } from "@mui/material";
+import { Avatar, Stack, Badge, IconButton, InputBase } from "@mui/material";
 import SettingsIcon from "@mui/icons-material/Settings";
+import SearchIcon from "@mui/icons-material/Search";
+import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
+import MenuIcon from "@mui/icons-material/Menu";
+import SmsIcon from "@mui/icons-material/Sms";
 import { Sidebar, Menu, MenuItem } from "react-pro-sidebar";
 import "./Navbar.css";
 import * as FaIcons from "react-icons/fa";
@@ -15,7 +18,6 @@ function AdminNavbar() {
   // const [sidebar, setSidebar] = useState(true);
   const [notification, setNotification] = useState(0);
   const [collapsed, setCollapsed] = useState(false);
-  const imageHeight = collapsed ? "60px" : "90px";
 
   const { user, setUser } = useContext(UserContext);
 
@@ -96,7 +98,7 @@ function AdminNavbar() {
               <div className="d-block mt-3">
                 <div
                   className="d-inline-block ms-2"
-                  style={{ color: "#FF7200 " }}
+                  style={{ color: "#FF7200" }}
                 >
                   <span className="d-block fw-bold">Admin</span>
                   <span className="d-block">
@@ -137,7 +139,7 @@ function AdminNavbar() {
               Mentors
             </MenuItem>
             <MenuItem
-              icon={<FaIcons.FaUserShield />}
+              icon={<AdminPanelSettingsOutlinedIcon />}
               component={<Link to="/admin/admins" />}
             >
               Admins
@@ -165,29 +167,49 @@ function AdminNavbar() {
             </MenuItem>
           </Menu>
         </Sidebar>
-        <main style={{ width: "100vw" }}>
+        <main style={{ width: "100vw" }} className="bg-body-secondary">
           <nav
-            className="navbar navbar-expand-lg p-0 m-0 bg-light sticky-top border-bottom"
+            className="navbar navbar-expand-lg p-0 m-0 bg-light sticky-top border-bottom mb-0"
             id="navbar"
           >
             <div className="container-fluid">
-              <FaIcons.FaThList
-                className="me-2"
-                style={{ fontSize: "20px" }}
-                onClick={() => setCollapsed(!collapsed)}
-              />
+              <IconButton
+                sx={{ p: "10px", fontSize: "36px" }}
+                aria-label="menu"
+              >
+                <MenuIcon onClick={() => setCollapsed(!collapsed)} />
+              </IconButton>
+              <span className="me-2 bg-dark-subtle">
+                <InputBase
+                  sx={{ ml: 1, flex: 1 }}
+                  placeholder="Search..."
+                  inputProps={{ "aria-label": "search google maps" }}
+                />
+                <IconButton
+                  type="button"
+                  sx={{ p: "10px" }}
+                  aria-label="search"
+                >
+                  <SearchIcon />
+                </IconButton>
+              </span>
+
               <Stack direction="row" spacing={2} className="ms-auto">
                 <span className="d-flex align-items-center">
-                  <Badge
-                    badgeContent={notification}
-                    color="secondary"
-                    className="me-3"
-                  >
-                    <FaIcons.FaRegBell
-                      color="action"
-                      style={{ fontSize: "20px" }}
-                    />
-                  </Badge>
+                  <IconButton className="me-2">
+                    <Badge badgeContent={notification} color="secondary">
+                      <FaIcons.FaRegBell
+                        color="action"
+                        style={{ fontSize: "20px" }}
+                      />
+                    </Badge>
+                  </IconButton>
+                  <IconButton className="me-2">
+                    <Badge badgeContent={1} color="secondary">
+                      <SmsIcon color="action" style={{ fontSize: "20px" }} />
+                    </Badge>
+                  </IconButton>
+
                   <SettingsIcon />
                 </span>
                 <Avatar alt="Remy Sharp" src={user && user.photo} />
@@ -197,58 +219,6 @@ function AdminNavbar() {
           <Outlet />
         </main>
       </div>
-      {/* <nav className="navbar navbar-expand-lg p-0 m-0 bg-light sticky-top border-bottom">
-        <div className="container-fluid">
-          <Link to="#" id="sidebar-Toggler" className="mb-3">
-            <FaIcons.FaBars onClick={showSidebar} />
-          </Link>
-          <Link to="/admin" className="navbar-brand">
-            <img src="/img/kulogo.png" width={50} height={44} alt="kulogo" />
-            <div className="d-inline-block align-middle ms-2">
-              <span className="d-block fw-bold main-header">
-                Chandaria Incubation
-              </span>
-              <span className="d-block fw-bold main-header">
-                Management System
-              </span>
-            </div>
-          </Link>
-
-          <div className=" ms-auto me-4 notification-profile">
-            <Link
-              to="/admin/innovator"
-              className="bi bi-bell position-relative me-3"
-            >
-              <span className=" translate-middle badge bg-danger">
-                {notification}
-              </span>
-            </Link>
-            <Link to="#" className="bi bi-person-circle"></Link>
-          </div>
-        </div>
-      </nav>
-      <div>
-        <ul className={sidebar ? "nav-menu-active" : "nav-menu"} id="sidebar">
-          {sidebarData.map((item, index) => {
-            return (
-              <li key={index} className={item.cName}>
-                <Link to={item.path}>
-                  <span className="icons">{item.icons}</span>
-                  <span className="title">{item.title}</span>
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
-      </div>
-      <div
-        className={
-          sidebar ? "content-sidebar-active" : "content-sidebar-inactive"
-        }
-        id="main-content"
-      >
-        <Outlet />
-      </div> */}
     </>
   );
 }

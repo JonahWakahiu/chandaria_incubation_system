@@ -8,8 +8,10 @@ import ReCAPTCHA from "react-google-recaptcha";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { stages, categories, schools } from "../../data";
+import { useNavigate } from "react-router-dom";
 
 function RegistrationForm() {
+  const navigate = useNavigate();
   const url =
     "http://localhost/incubation_system_rest_api/LandingPage/registration.php";
 
@@ -25,6 +27,7 @@ function RegistrationForm() {
 
       const responseData = await response.json();
       if (responseData.status === 202) {
+        actions.setSubmitting(false);
         toast.info(responseData.message, {
           position: "top-right",
           autoClose: 5000,
@@ -36,6 +39,7 @@ function RegistrationForm() {
           theme: "light",
         });
       } else if (responseData.status === 200) {
+        navigate("/login");
         actions.resetForm();
         toast.success(responseData.message, {
           position: "top-right",
@@ -48,6 +52,7 @@ function RegistrationForm() {
           theme: "light",
         });
       } else {
+        actions.setSubmitting(false);
         toast.warning(responseData.message, {
           position: "top-right",
           autoClose: 5000,
@@ -60,6 +65,7 @@ function RegistrationForm() {
         });
       }
     } catch (error) {
+      actions.setSubmitting(false);
       toast.error("Server connection failed!", {
         position: "top-right",
         autoClose: 5000,
@@ -94,78 +100,78 @@ function RegistrationForm() {
             innovationCategory: "",
             innovationStage: "",
             description: "",
-            // ReCAPTCHA: "",
+            ReCAPTCHA: "",
           }}
-          validationSchema={Yup.object().shape({
-            firstName: Yup.string()
-              .matches(
-                /^[a-zA-Z]{2,15}$/,
-                "Should only contains alphabets and 2 to 15 characters"
-              )
-              .required("Required"),
-            lastName: Yup.string()
-              .matches(
-                /^[a-zA-Z]{2,20}$/,
-                "Should only contains alphabets and 2 to 20 characters"
-              )
-              .required("Required"),
-            email: Yup.string()
-              .email("Invalid Email address")
-              .required("Required"),
-            phoneNumber: Yup.string()
-              .matches(/^0(1|7)[\d]{8}$/, "Invalid phone number hint: 07/01")
-              .required("Required"),
-            nationalId: Yup.string()
-              .matches(/^[0-9]{8}$/, "National Id must be 8 characters only")
-              .required("Required"),
-            photo: Yup.mixed()
-              .required("Required")
-              .test(
-                "FILE_SIZE",
-                "Too big!",
-                (value) => value && value.size < 1024 * 1024
-              )
-              .test(
-                "FILE_TYPE",
-                "Invalid!",
-                (value) =>
-                  value && ["image/png", "image/jpeg"].includes(value.type)
-              ),
-            kuStudent: Yup.string().required("required"),
-            ipRegistered: Yup.string().required("Required"),
-            incubationDate: Yup.string().required("Required"),
-            partnerNames: Yup.string().test(
-              "wordCount",
-              "Description should not exceed 50 words",
-              (value) => {
-                if (value) {
-                  const wordCount = value.trim().split(/\s+/).length;
-                  return wordCount <= 50;
-                }
-                return true;
-              }
-            ),
-            innovationCategory: Yup.string()
-              .required("Required")
-              .notOneOf(["Choose..."], "Please select an option"),
-            innovationStage: Yup.string()
-              .required("Required")
-              .notOneOf(["Choose..."], "Please select an option"),
-            description: Yup.string()
-              .required("Required")
-              .test(
-                "wordCount",
-                "Description should not exceed 250 words",
-                (value) => {
-                  if (value) {
-                    const wordCount = value.trim().split(/\s+/).length;
-                    return wordCount <= 250;
-                  }
-                  return true;
-                }
-              ),
-            // ReCAPTCHA: Yup.string().required("Required"),
-          })}
+          // validationSchema={Yup.object().shape({
+          //   firstName: Yup.string()
+          //     .matches(
+          //       /^[a-zA-Z]{2,15}$/,
+          //       "Should only contains alphabets and 2 to 15 characters"
+          //     )
+          //     .required("Required"),
+          //   lastName: Yup.string()
+          //     .matches(
+          //       /^[a-zA-Z]{2,20}$/,
+          //       "Should only contains alphabets and 2 to 20 characters"
+          //     )
+          //     .required("Required"),
+          //   email: Yup.string()
+          //     .email("Invalid Email address")
+          //     .required("Required"),
+          //   phoneNumber: Yup.string()
+          //     .matches(/^0(1|7)[\d]{8}$/, "Invalid phone number hint: 07/01")
+          //     .required("Required"),
+          //   nationalId: Yup.string()
+          //     .matches(/^[0-9]{8}$/, "National Id must be 8 characters only")
+          //     .required("Required"),
+          //   photo: Yup.mixed()
+          //     .required("Required")
+          //     .test(
+          //       "FILE_SIZE",
+          //       "Too big!",
+          //       (value) => value && value.size < 1024 * 1024
+          //     )
+          //     .test(
+          //       "FILE_TYPE",
+          //       "Invalid!",
+          //       (value) =>
+          //         value && ["image/png", "image/jpeg"].includes(value.type)
+          //     ),
+          //   kuStudent: Yup.string().required("required"),
+          //   ipRegistered: Yup.string().required("Required"),
+          //   incubationDate: Yup.string().required("Required"),
+          //   partnerNames: Yup.string().test(
+          //     "wordCount",
+          //     "Description should not exceed 50 words",
+          //     (value) => {
+          //       if (value) {
+          //         const wordCount = value.trim().split(/\s+/).length;
+          //         return wordCount <= 50;
+          //       }
+          //       return true;
+          //     }
+          //   ),
+          //   innovationCategory: Yup.string()
+          //     .required("Required")
+          //     .notOneOf(["Choose..."], "Please select an option"),
+          //   innovationStage: Yup.string()
+          //     .required("Required")
+          //     .notOneOf(["Choose..."], "Please select an option"),
+          //   description: Yup.string()
+          //     .required("Required")
+          //     .test(
+          //       "wordCount",
+          //       "Description should not exceed 250 words",
+          //       (value) => {
+          //         if (value) {
+          //           const wordCount = value.trim().split(/\s+/).length;
+          //           return wordCount <= 250;
+          //         }
+          //         return true;
+          //       }
+          //     ),
+          //   ReCAPTCHA: Yup.string().required("Required"),
+          // })}
           onSubmit={(values, actions) => {
             const formData = new FormData();
             Object.keys(values).forEach((key) => {
@@ -173,9 +179,9 @@ function RegistrationForm() {
             });
 
             sendInputData(formData, actions);
-            for (let entry of formData.entries()) {
-              console.log(entry);
-            }
+            // for (let entry of formData.entries()) {
+            //   console.log(entry);
+            // }
           }}
         >
           {({ errors, touched, isSubmitting, values, setFieldValue }) => (

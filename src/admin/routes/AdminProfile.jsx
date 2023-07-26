@@ -4,6 +4,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { UserContext } from "../../UserContext";
 import { ToastContainer, toast } from "react-toastify";
 import * as Yup from "yup";
+import { TextField } from "@mui/material";
 
 function AdminProfile() {
   const { user, setUser } = useContext(UserContext);
@@ -22,18 +23,9 @@ function AdminProfile() {
       });
 
       const responseData = await response.json();
-      if (responseData.status === 202) {
-        toast.info(responseData.message, {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-      } else if (responseData.status === 200) {
+      const userInfo = responseData.userInfo;
+      if (responseData.status === 200) {
+        setUser(userInfo);
         toast.success(responseData.message, {
           position: "top-right",
           autoClose: 5000,
@@ -71,22 +63,20 @@ function AdminProfile() {
   }
 
   return (
-    <div className="container-fluid d-flex justify-content-center bg-body-secondary">
-      <div
-        className="row w-75 border rounded mt-4 mb-5 px-3 bg-body-tertiary d-flex justify-content-between"
-        style={{ height: "85vh" }}
-      >
-        <div className="col-12 pb-2 pt-3">
-          <h5>General</h5>
-          <p>Setup your general profile details</p>
+    <div className="container-fluid">
+      <div className="row d-flex justify-content-center">
+        <div
+          className="col-12 col-md-10 col-lg-9 col-xl-7 pb-2 pt-3 bg-light mt-3 p-3 border rounded shadow"
+          style={{ minHeight: "50vh" }}
+        >
           <Formik
             initialValues={{
               photo: "",
-              firstName: "",
-              lastName: "",
-              email: "",
-              phoneNumber: "",
-              nationalId: "",
+              firstName: user ? user.firstName : "",
+              lastName: user ? user.lastName : "",
+              email: user ? user.email : "",
+              phoneNumber: user ? user.phoneNumber : "",
+              nationalId: user ? user.nationalId : "",
             }}
             validationSchema={Yup.object().shape({
               firstName: Yup.string().matches(
@@ -113,140 +103,137 @@ function AdminProfile() {
                 formData.append(key, values[key]);
               });
 
-              for (let entry of formData.entries()) {
-                console.log(entry);
-              }
+              // for (let entry of formData.entries()) {
+              //   console.log(entry);
+              // }
 
               sendProfileData(formData);
             }}
           >
             {({ errors, touched, isSubmitting, values, setFieldValue }) => (
               <Form className="clearfix">
-                <section className="col-md-5 float-md-end mb-3">
-                  <h6 className="text-center w-50">Profile Picture</h6>
+                <legend className="text-center">Personal Details</legend>
+                <section className="col-md-5 float-md-end mb-3 ms-md-3 mt-md-5 d-flex flex-column align-items-center">
+                  <h6>Profile Picture</h6>
                   <img
                     src={user && user.photo}
                     alt="user2"
                     style={{
-                      // borderRadius: "50%",
                       height: "150px",
                       width: "150px",
-                      margin: "20px 60px",
                     }}
+                    className="border border-4 border-dark rounded"
                   />
-                  <input
-                    type="file"
-                    name="photo"
-                    id="photo"
-                    className={`form-control w-75 ${
-                      errors.photo && touched.photo ? "input-error" : ""
-                    }`}
-                    onChange={(event) =>
-                      setFieldValue("photo", event.target.files[0])
-                    }
-                  />
+                  <div className="w-75 mt-2">
+                    <input
+                      type="file"
+                      name="photo"
+                      variant="standard"
+                      onChange={(event) =>
+                        setFieldValue("photo", event.target.files[0])
+                      }
+                    />
+                  </div>
                   <span className="errors">
                     <ErrorMessage name="photo" />
                   </span>
                 </section>
 
                 {/* firstName */}
-                <div className="col-md-6 mb-3">
-                  <label htmlFor="firstName" className="form-label">
-                    First Name<span className="text-danger ms-2">*</span>
-                  </label>
-                  <Field
-                    placeholder={user && user.firstName}
-                    type="text"
-                    name="firstName"
-                    id="firstName"
-                    className={`form-control ${
-                      errors.firstName && touched.firstName ? "input-error" : ""
-                    }`}
-                  />
-                  <span className="errors">
-                    <ErrorMessage name="firstName" />
-                  </span>
+                <div className="col-md-6 mb-2">
+                  <Field name="firstName">
+                    {({ field }) => (
+                      <TextField
+                        {...field}
+                        variant="standard"
+                        fullWidth
+                        helperText={
+                          <span className="errors">
+                            <ErrorMessage name="firstName " />
+                          </span>
+                        }
+                        label="First Name"
+                      />
+                    )}
+                  </Field>
                 </div>
                 {/* lastName */}
-                <div className="col-md-6 mb-3">
-                  <label htmlFor="lastName" className="form-label">
-                    Last Name<span className="text-danger ms-2">*</span>
-                  </label>
-                  <Field
-                    placeholder={user && user.lastName}
-                    type="text"
-                    name="lastName"
-                    id="lastName"
-                    className={`form-control ${
-                      errors.lastName && touched.lastName ? "input-error" : ""
-                    }`}
-                  />
-                  <span className="errors">
-                    <ErrorMessage name="lastName" />
-                  </span>
-                </div>
-                {/* email */}
-                <div className="col-md-6 mb-3">
-                  <label htmlFor="email" className="form-label">
-                    Email<span className="text-danger ms-2">*</span>
-                  </label>
-                  <Field
-                    placeholder={user && user.email}
-                    type="email"
-                    name="email"
-                    id="email"
-                    className={`form-control ${
-                      errors.email && touched.email ? "input-error" : ""
-                    }`}
-                  />
-                  <span className="errors">
-                    <ErrorMessage name="email" />
-                  </span>
+                <div className="col-md-6 mb-2">
+                  <Field name="lastName">
+                    {({ field }) => (
+                      <TextField
+                        {...field}
+                        variant="standard"
+                        fullWidth
+                        helperText={
+                          <span className="errors">
+                            <ErrorMessage name="lastName " />
+                          </span>
+                        }
+                        label="Last Name"
+                      />
+                    )}
+                  </Field>
                 </div>
 
-                {/* phone Number */}
-                <div className="col-md-6 mb-3">
-                  <label htmlFor="phoneNumber" className="form-label">
-                    Phone Number<span className="text-danger ms-2">*</span>
-                  </label>
-                  <Field
-                    placeholder={user && user.phoneNumber}
-                    type="text"
-                    name="phoneNumber"
-                    id="phoneNumber"
-                    className={`form-control ${
-                      errors.phoneNumber && touched.phoneNumber
-                        ? "input-error"
-                        : ""
-                    }`}
-                  />
-                  <span className="errors">
-                    <ErrorMessage name="phoneNumber" />
-                  </span>
-                </div>
-                {/* national Id */}
-                <div className="col-md-6 mb-3">
-                  <label htmlFor="nationalId">
-                    National Id<span className="text-danger ms-2">*</span>
-                  </label>
-                  <Field
-                    placeholder={user && user.nationalId}
-                    type="text"
-                    name="nationalId"
-                    id="nationalId"
-                    className={`form-control ${
-                      errors.nationalId && touched.nationalId
-                        ? "input-error"
-                        : ""
-                    }`}
-                  />
-                  <span className="errors">
-                    <ErrorMessage name="nationalId" />
-                  </span>
+                <div className="col-md-6 mb-2">
+                  <Field name="email">
+                    {({ field }) => (
+                      <TextField
+                        disabled
+                        {...field}
+                        variant="standard"
+                        fullWidth
+                        helperText={
+                          <span className="errors">
+                            <ErrorMessage name="email" />
+                          </span>
+                        }
+                        label="email"
+                      />
+                    )}
+                  </Field>
                 </div>
 
-                <div className="col-md-6 d-flex justify-content-center">
+                {/* phone number */}
+                <div className="col-md-6 mb-2">
+                  <Field name="phoneNumber">
+                    {({ field }) => (
+                      <TextField
+                        {...field}
+                        variant="standard"
+                        fullWidth
+                        helperText={
+                          <span className="errors">
+                            <ErrorMessage name="phoneNumber" />
+                          </span>
+                        }
+                        label="Phone Number"
+                      />
+                    )}
+                  </Field>
+                </div>
+
+                {/* National ID */}
+                <div className="col-md-6 mb-3">
+                  <Field name="nationalId">
+                    {({ field }) => (
+                      <TextField
+                        {...field}
+                        variant="standard"
+                        fullWidth
+                        helperText={
+                          <span className="errors">
+                            <ErrorMessage name="nationalId" />
+                          </span>
+                        }
+                        label="National Id"
+                      />
+                    )}
+                  </Field>
+                </div>
+
+                <div className="col-12 d-flex justify-content-center mt-2">
                   <button type="submit" className="btn btn-success w-50">
                     Update
                   </button>

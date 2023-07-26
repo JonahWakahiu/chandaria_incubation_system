@@ -17,18 +17,7 @@ async function sendMentorData(formData, actions) {
     });
 
     const responseData = await response.json();
-    if (responseData.status === 202) {
-      toast.info(responseData.message, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-    } else if (responseData.status === 200) {
+    if (responseData.status === 200) {
       actions.resetForm();
       toast.success(responseData.message, {
         position: "top-right",
@@ -41,6 +30,7 @@ async function sendMentorData(formData, actions) {
         theme: "light",
       });
     } else {
+      actions.setSubmitting(false);
       toast.warning(responseData.message, {
         position: "top-right",
         autoClose: 5000,
@@ -53,6 +43,7 @@ async function sendMentorData(formData, actions) {
       });
     }
   } catch (error) {
+    actions.setSubmitting(false);
     toast.error("Server connection failed!", {
       position: "top-right",
       autoClose: 5000,
@@ -108,7 +99,7 @@ function AdminMentor() {
 
   const columns = [
     { field: "id", headerName: "ID" },
-    { field: "email", headerName: "Email", flex: 1 },
+    { field: "email", headerName: "Email", editable: true },
     { field: "nationalId", headerName: "National Id" },
   ];
   return (
@@ -137,10 +128,10 @@ function AdminMentor() {
               },
             }}
             rows={mentors && mentors}
+            editMode="row"
             columns={columns}
             slots={{ toolbar: GridToolbar }}
           />
-          {mentors.length === 0 && <p>No mentor available.</p>}
         </div>
 
         <div className="col align-items-center">

@@ -1,17 +1,126 @@
-import React from "react";
+import { useState, useContext } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { ToastContainer, toast } from "react-toastify";
-import { TextField, MenuItem } from "@mui/material";
+import {
+  TextField,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Select,
+} from "@mui/material";
 import { stages } from "../../data";
 import "../Innovator.css";
+import { UserContext } from "../../UserContext";
+
+const BusinessDetailsURL =
+  "http://localhost/incubation_system_rest_api/innovator/handleInnovationTrackingForm.php";
+const QuarterlyProgressURL =
+  "http://localhost/incubation_system_rest_api/innovator/handleQuaterlyProgressReport.php";
 
 function ExpectationForm() {
+  const { user, setUser } = useContext(UserContext);
+
+  async function handleInnovationTrackingForm(formData, actions) {
+    try {
+      const response = await fetch(BusinessDetailsURL, {
+        method: "POST",
+        header: {
+          "Content-Type": "application/json",
+        },
+        body: formData,
+      });
+
+      const responseData = await response.json();
+      if (responseData.status === 200) {
+        toast.success(responseData.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      } else {
+        toast.warning(responseData.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      }
+    } catch (error) {
+      toast.error("Server connection failed!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  }
+  async function handleQuarterlyProgress(formData, actions) {
+    try {
+      const response = await fetch(QuarterlyProgressURL, {
+        method: "POST",
+        body: formData,
+      });
+
+      const responseData = await response.json();
+      if (responseData.status === 200) {
+        toast.success(responseData.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      } else {
+        toast.warning(responseData.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      }
+    } catch (error) {
+      toast.error("Error", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  }
   return (
-    <div className="container-fluid bg-body-secondary">
-      <div className="row justify-content-around pt-3" id="reports-wrapper">
-        <div className="col-lg-7 border rounded p-3 bg-body-tertiary bg-danger">
+    <div
+      className="container-fluid bg-body-secondary"
+      style={{ height: "94vh" }}
+    >
+      <div className="row justify-content-around mt-4" id="reports-wrapper">
+        <div className="col-lg-7 border rounded p-3 bg-light">
           <Formik
             initialValues={{
+              email: user ? user.email : "",
               companyName: "",
               proprietorsName: "",
               mentorsName: "",
@@ -25,185 +134,235 @@ function ExpectationForm() {
               challenges: "",
               milestone: "",
             }}
+            onSubmit={(values, actions) => {
+              const formData = new FormData();
+              Object.keys(values).forEach((key) => {
+                formData.append(key, values[key]);
+              });
+
+              handleQuarterlyProgress(formData, actions);
+              // for (let entry of formData.entries()) {
+              //   console.log(entry);
+              // }
+            }}
           >
-            {(props) => (
+            {({ setFieldValue, errors, touched }) => (
               <Form className="row g-3">
-                <h3>Quarterly Progress Report</h3>
+                <legend className="text-center">
+                  Quarterly Progress Report
+                </legend>
 
                 <div className="col-md-6">
-                  <Field
-                    type="text"
-                    name="companyName"
-                    id="companyName"
-                    fullWidth
-                    label="Name of Company"
-                    variant="standard"
-                    as={TextField}
-                    helperText={<ErrorMessage name="companyName" />}
-                  />
-                </div>
-
-                <div className="col-md-6">
-                  <Field
-                    type="text"
-                    name="proprietorsName"
-                    label="Name of Proprietors"
-                    id="proprietorsName"
-                    fullWidth
-                    variant="standard"
-                    as={TextField}
-                    helperText={<ErrorMessage name="proprietorsName" />}
-                  />
-                </div>
-
-                <div className="col-md-6">
-                  <Field
-                    type="text"
-                    name="mentorsName"
-                    id="mentorsName"
-                    label="Name of mentors"
-                    fullWidth
-                    variant="standard"
-                    as={TextField}
-                    helperText={<ErrorMessage name="mentorsName" />}
-                  />
-                </div>
-
-                <div className="col-md-6">
-                  <Field
-                    type="text"
-                    name="productDescription"
-                    id="productDescription"
-                    label="Description of Product"
-                    multiline
-                    maxRows={5}
-                    fullWidth
-                    variant="standard"
-                    as={TextField}
-                    helperText={<ErrorMessage name="productDescription" />}
-                  />
-                </div>
-
-                <div className="col-md-6">
-                  <Field
-                    type="text"
-                    name="productionStage"
-                    id="productionStage"
-                    label="Stage in Production"
-                    variant="standard"
-                    select
-                    fullWidth
-                    as={TextField}
-                    helperText={<ErrorMessage name="productDescription" />}
-                  >
-                    {stages.map((stages) => (
-                      <MenuItem key={stages.id} value={stages.name}>
-                        {stages.name}
-                      </MenuItem>
-                    ))}
+                  <Field name="companyName">
+                    {({ field }) => (
+                      <TextField
+                        {...field}
+                        variant="standard"
+                        fullWidth
+                        helperText={
+                          <span className="errors">
+                            <ErrorMessage name="companyName" />
+                          </span>
+                        }
+                        label="Company Name"
+                      />
+                    )}
                   </Field>
                 </div>
 
                 <div className="col-md-6">
-                  <Field
-                    type="text"
-                    name="facilities"
-                    id="facilities"
-                    label="Facilities"
-                    fullWidth
-                    variant="standard"
-                    as={TextField}
-                    helperText={<ErrorMessage name="facilities" />}
-                  />
+                  <Field name="proprietorsName">
+                    {({ field }) => (
+                      <TextField
+                        {...field}
+                        variant="standard"
+                        fullWidth
+                        helperText={
+                          <span className="errors">
+                            <ErrorMessage name="proprietorsName" />
+                          </span>
+                        }
+                        label="Proprietors Name"
+                      />
+                    )}
+                  </Field>
                 </div>
 
                 <div className="col-md-6">
-                  <label htmlFor="financialPlan" className="form-label">
-                    Financial Plan
-                  </label>
-
-                  <Field
-                    type="file"
-                    name="financialPlan"
-                    id="financialPlan"
-                    variant="standard"
-                    as={TextField}
-                    helperText={<ErrorMessage name="financialPlan" />}
-                  />
+                  <Field name="mentorsName">
+                    {({ field }) => (
+                      <TextField
+                        {...field}
+                        variant="standard"
+                        fullWidth
+                        helperText={
+                          <span className="errors">
+                            <ErrorMessage name="mentorsName" />
+                          </span>
+                        }
+                        label="Mentors Name"
+                      />
+                    )}
+                  </Field>
                 </div>
 
                 <div className="col-md-6">
-                  <label htmlFor="texReturns" className="form-label">
-                    Tax Returns
-                  </label>
-
-                  <Field
-                    type="file"
-                    name="taxReturns"
-                    id="taxReturns"
-                    variant="standard"
-                    as={TextField}
-                    helperText={<ErrorMessage name="taxReturns" />}
-                  />
+                  <Field name="productDescription">
+                    {({ field }) => (
+                      <TextField
+                        {...field}
+                        variant="standard"
+                        fullWidth
+                        helperText={
+                          <span className="errors">
+                            <ErrorMessage name="productDescription" />
+                          </span>
+                        }
+                        label="Product description"
+                      />
+                    )}
+                  </Field>
                 </div>
-                <div className="col-md-6">
-                  <label htmlFor="nusinessPlan" className="form-label">
-                    Business Plan
-                  </label>
 
-                  <Field
+                <div className="col-md-6">
+                  <Field name="productionStage">
+                    {({ field }) => (
+                      <FormControl variant="standard" fullWidth>
+                        <InputLabel>
+                          at which stage are you in production?
+                        </InputLabel>
+                        <Select {...field}>
+                          <MenuItem value="">
+                            <em>None</em>
+                          </MenuItem>
+                          {stages.map((stages) => (
+                            <MenuItem key={stages.id} value={stages.name}>
+                              {stages.name}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                        <span className="errors">
+                          <ErrorMessage name="productionStage" />
+                        </span>
+                      </FormControl>
+                    )}
+                  </Field>
+                </div>
+
+                <div className="col-md-6">
+                  <Field name="facilities">
+                    {({ field }) => (
+                      <TextField
+                        {...field}
+                        variant="standard"
+                        fullWidth
+                        helperText={
+                          <span className="errors">
+                            <ErrorMessage name="facilities" />
+                          </span>
+                        }
+                        label="Facilities"
+                      />
+                    )}
+                  </Field>
+                </div>
+
+                <div className="col-md-6">
+                  <label htmlFor="businessPlan">Business Plan</label>
+                  <input
                     type="file"
+                    variant="standard"
                     name="businessPlan"
-                    id="businessPlan"
+                    onChange={(event) =>
+                      setFieldValue("businessPlan", event.target.files[0])
+                    }
+                  />
+                </div>
+
+                <div className="col-md-6">
+                  <label htmlFor="financialPlan">Financial Plan</label>
+                  <input
+                    name="financialPlan"
+                    type="file"
                     variant="standard"
-                    as={TextField}
-                    helperText={<ErrorMessage name="businessPlan" />}
+                    onChange={(event) =>
+                      setFieldValue("financialPlan", event.target.files[0])
+                    }
+                  />
+                </div>
+
+                <div className="col-md-6">
+                  <label htmlFor="taxReturns">Tax Returns</label>
+                  <input
+                    name="taxReturns"
+                    type="file"
+                    variant="standard"
+                    onChange={(event) =>
+                      setFieldValue("taxReturns", event.target.files[0])
+                    }
                   />
                 </div>
 
                 <h6>Incubate's Feedback</h6>
 
                 <div className="col-md-6">
-                  <Field
-                    label="Achievements"
-                    variant="standard"
-                    as={TextField}
-                    helperText={<ErrorMessage name="achievement" />}
-                    type="text"
-                    multiline
-                    maxRows={5}
-                    fullWidth
-                    name="achievement"
-                    id="achievement"
-                  />
+                  <Field name="achievement">
+                    {({ field }) => (
+                      <TextField
+                        {...field}
+                        multiline
+                        maxRows={5}
+                        variant="standard"
+                        fullWidth
+                        helperText={
+                          <span className="errors">
+                            <ErrorMessage name="achievement" />
+                          </span>
+                        }
+                        label="Achievements"
+                      />
+                    )}
+                  </Field>
                 </div>
+
                 <div className="col-md-6">
-                  <Field
-                    type="text"
-                    name="challenges"
-                    id="challenges"
-                    label="Challenges"
-                    multiline
-                    maxRows={5}
-                    fullWidth
-                    variant="standard"
-                    as={TextField}
-                    helperText={<ErrorMessage name="challenges" />}
-                  />
+                  <Field name="challenges">
+                    {({ field }) => (
+                      <TextField
+                        {...field}
+                        variant="standard"
+                        fullWidth
+                        multiline
+                        maxRows={5}
+                        helperText={
+                          <span className="errors">
+                            <ErrorMessage name="challenges" />
+                          </span>
+                        }
+                        label="Challenges"
+                      />
+                    )}
+                  </Field>
                 </div>
+
                 <div className="col-md-6">
-                  <Field
-                    type="text"
-                    name="milestone"
-                    label="Milestone"
-                    id="milestone"
-                    multiline
-                    maxRows={5}
-                    fullWidth
-                    variant="standard"
-                    as={TextField}
-                    helperText={<ErrorMessage name="milestone" />}
-                  />
+                  <Field name="milestone">
+                    {({ field }) => (
+                      <TextField
+                        {...field}
+                        variant="standard"
+                        fullWidth
+                        multiline
+                        maxRows={5}
+                        helperText={
+                          <span className="errors">
+                            <ErrorMessage name="milestone" />
+                          </span>
+                        }
+                        label="Milestone"
+                      />
+                    )}
+                  </Field>
                 </div>
 
                 <div className="col-12 d-flex justify-content-center">
@@ -215,72 +374,82 @@ function ExpectationForm() {
             )}
           </Formik>
         </div>
-        <div className="col-lg-3 ">
-          <article>
-            <Formik
-              initialValues={{
-                innovationStage: "",
-                userMVP: "",
-                commercialized: "",
-              }}
-              onSubmit={(values, actions) => {
-                const formData = new FormData();
-                Object.keys(values).forEach((key) => {
-                  formData.append(key, values[key]);
-                });
+        <div className="col-lg-3 p-3">
+          <Formik
+            initialValues={{
+              email: user ? user.email : "",
+              innovationStage: "",
+              userMVP: "",
+              commercialized: "",
+            }}
+            onSubmit={(values, actions) => {
+              const formData = new FormData();
+              Object.keys(values).forEach((key) => {
+                formData.append(key, values[key]);
+              });
 
-                // sendInputData(formData, actions);
-                for (let entry of formData.entries()) {
-                  console.log(entry);
-                }
-              }}
-            >
-              {({ errors, touched }) => (
-                <Form className="row g-2 p-3 border rounded bg-body-tertiary">
-                  <h6>Innovation tracking form</h6>
+              handleInnovationTrackingForm(formData, actions);
+              // for (let entry of formData.entries()) {
+              //   console.log(entry);
+              // }
+            }}
+          >
+            {({ errors, touched }) => (
+              <Form className="row g-3 p-3 border rounded bg-light">
+                <legend className="text-center">
+                  Innovation tracking form
+                </legend>
 
-                  <div className="col-12">
-                    <Field
-                      as={TextField}
-                      variant="standard"
-                      type="text"
-                      fullWidth
-                      name="innovationStage"
-                      id="innovationStage"
-                      label="Innovation Stage"
-                      helperText={<ErrorMessage name="firstName" />}
-                    />
-                  </div>
+                <div className="col-12">
+                  <Field name="innovationStage">
+                    {({ field }) => (
+                      <FormControl variant="standard" fullWidth>
+                        <InputLabel>Innovation Stage</InputLabel>
+                        <Select {...field} label="innovation Stage 1">
+                          <MenuItem value="">
+                            <em>None</em>
+                          </MenuItem>
+                          {stages.map((stages) => (
+                            <MenuItem key={stages.id} value={stages.name}>
+                              {stages.name}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                        <span className="errors">
+                          <ErrorMessage name="innovationStage" />
+                        </span>
+                      </FormControl>
+                    )}
+                  </Field>
+                </div>
 
-                  <div className="col-12">
-                    <Field
-                      name="userMVP"
-                      type="text"
-                      id="userMVP"
-                      fullWidth
-                      label="Do you have a minimum viable product (MVP)"
-                      as={TextField}
-                      variant="standard"
-                    />
-                  </div>
-                  <div className="col-12">
-                    <Field
-                      type="text"
-                      name="commercialized"
-                      id="commercialized"
-                      as={TextField}
-                      variant="standard"
-                      fullWidth
-                      label="Is the Innovation Commercialized?"
-                    />
-                  </div>
-                  <button type="submit" className="btn btn-success">
-                    Submit
-                  </button>
-                </Form>
-              )}
-            </Formik>
-          </article>
+                <div className="col-12">
+                  <Field
+                    name="userMVP"
+                    id="userMVP"
+                    fullWidth
+                    label="Do you have a minimum viable product (MVP)"
+                    as={TextField}
+                    variant="standard"
+                  />
+                </div>
+                <div className="col-12">
+                  <Field
+                    type="text"
+                    name="commercialized"
+                    id="commercialized"
+                    as={TextField}
+                    variant="standard"
+                    fullWidth
+                    label="Is the Innovation Commercialized?"
+                  />
+                </div>
+                <button type="submit" className="btn btn-success">
+                  Submit
+                </button>
+              </Form>
+            )}
+          </Formik>
         </div>
       </div>
       <ToastContainer

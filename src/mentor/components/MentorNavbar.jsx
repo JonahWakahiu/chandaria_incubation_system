@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Sidebar, Menu, MenuItem } from "react-pro-sidebar";
 import { Avatar, Stack, Badge } from "@mui/material";
 import SettingsIcon from "@mui/icons-material/Settings";
@@ -8,9 +8,11 @@ import * as FcIcons from "react-icons/fc";
 import * as AiIcons from "react-icons/ai";
 import * as BiIcons from "react-icons/bi";
 import { Link, Outlet } from "react-router-dom";
+import { UserContext } from "../../UserContext";
 
 function MentorNavbar() {
   const [collapsed, setCollapsed] = useState();
+  const { user, setUser } = useContext(UserContext);
 
   return (
     <div className="container-fluid p-0">
@@ -55,7 +57,9 @@ function MentorNavbar() {
                   style={{ color: "#FF7200 " }}
                 >
                   <span className="d-block fw-bold">Mentor</span>
-                  <span className="d-block">Jonah Wakahiu</span>
+                  <span className="d-block">
+                    {user && user.firstName} {user && user.lastName}
+                  </span>
                 </div>
               </div>
             </div>
@@ -86,10 +90,12 @@ function MentorNavbar() {
             >
               Profile
             </MenuItem>
-            <MenuItem icon={<BiIcons.BiLogOut />}>Logout</MenuItem>
+            <MenuItem icon={<BiIcons.BiLogOut />} component={<Link to="/" />}>
+              Logout
+            </MenuItem>
           </Menu>
         </Sidebar>
-        <main className="w-100">
+        <main className="w-100 bg-body-secondary">
           <nav
             className="navbar navbar-expand-lg p-0 m-0 bg-light sticky-top border-bottom"
             id="navbar"
@@ -110,7 +116,7 @@ function MentorNavbar() {
                   </Badge>
                   <SettingsIcon />
                 </span>
-                <Avatar alt="Remy Sharp" src="/img/user22.jpg" />
+                <Avatar alt={user && user.firstName} src={user && user.photo} />
               </Stack>
             </div>
           </nav>

@@ -1,43 +1,40 @@
 export const schools = [
-  { id: 1, name: "Choose..." },
-  { id: 2, name: "School of Agriculture ad Environmental Science" },
-  { id: 3, name: "School of Business, Economics and Tourism" },
-  { id: 4, name: "School of Education" },
-  { id: 5, name: "School of Engineering and Architecture" },
-  { id: 6, name: "School of Health Science" },
-  { id: 7, name: "School of Law, Arts and Social Sciences" },
-  { id: 8, name: "School of Pure And Applied Science" },
-  { id: 9, name: "Graduate School" },
-  { id: 10, name: "Digital School of Virtual and Open Learning" },
+  { id: 1, name: "School of Agriculture ad Environmental Science" },
+  { id: 2, name: "School of Business, Economics and Tourism" },
+  { id: 3, name: "School of Education" },
+  { id: 4, name: "School of Engineering and Architecture" },
+  { id: 5, name: "School of Health Science" },
+  { id: 6, name: "School of Law, Arts and Social Sciences" },
+  { id: 7, name: "School of Pure And Applied Science" },
+  { id: 8, name: "Graduate School" },
+  { id: 9, name: "Digital School of Virtual and Open Learning" },
 ];
 
 export const categories = [
-  { id: 1, name: "Choose..." },
-  { id: 2, name: "Business and Professional Services" },
-  { id: 3, name: "Information and Professional Services" },
-  { id: 4, name: "Marketing and Communication Technology" },
-  { id: 5, name: "Manufacturing and Construction" },
-  { id: 6, name: "Transport and logistics" },
-  { id: 7, name: "Bio and Nano-Technology" },
-  { id: 8, name: "Health and Nutrition" },
-  { id: 9, name: "Green and ecological business" },
-  { id: 10, name: "Tourism and eco-tourism" },
-  { id: 11, name: "Fine and Performing Arts" },
-  { id: 12, name: "Sports, Leisure and Entertainment" },
-  { id: 13, name: "Water and Sanitation" },
-  { id: 14, name: "Energy" },
-  { id: 15, name: "Media and Entertainment" },
+  { id: 1, name: "Business and Professional Services" },
+  { id: 2, name: "Information and Professional Services" },
+  { id: 3, name: "Marketing and Communication Technology" },
+  { id: 4, name: "Manufacturing and Construction" },
+  { id: 5, name: "Transport and logistics" },
+  { id: 6, name: "Bio and Nano-Technology" },
+  { id: 7, name: "Health and Nutrition" },
+  { id: 8, name: "Green and ecological business" },
+  { id: 9, name: "Tourism and eco-tourism" },
+  { id: 10, name: "Fine and Performing Arts" },
+  { id: 11, name: "Sports, Leisure and Entertainment" },
+  { id: 12, name: "Water and Sanitation" },
+  { id: 13, name: "Energy" },
+  { id: 14, name: "Media and Entertainment" },
 ];
 
 export const stages = [
-  { id: 1, name: "Choose..." },
-  { id: 2, name: "Idea Phase" },
-  { id: 3, name: "Research and Development" },
-  { id: 4, name: "Prototype phase" },
-  { id: 5, name: "Start-up" },
-  { id: 6, name: "Market phase" },
-  { id: 7, name: "Scaling-up phase" },
-  { id: 8, name: "Other(Specify)" },
+  { id: 1, name: "Idea Phase" },
+  { id: 2, name: "Research and Development" },
+  { id: 3, name: "Prototype phase" },
+  { id: 4, name: "Start-up" },
+  { id: 5, name: "Market phase" },
+  { id: 6, name: "Scaling-up phase" },
+  { id: 7, name: "Other(Specify)" },
 ];
 
 export const services = [
@@ -69,7 +66,7 @@ export const ideaProtections = [
   { id: 3, name: "Trademark" },
   { id: 4, name: "Utility Model" },
   { id: 5, name: "Trade Secret" },
-  { id: 5, name: "None of the above" },
+  { id: 6, name: "None of the above" },
 ];
 
 export const projectServices = [
@@ -102,6 +99,6 @@ export const projectSupport = [
 
 export const projectTraining = [
   { id: 1, name: "Pitching and communication skills" },
-  { id: 1, name: "Design thinking and lean startup" },
-  { id: 1, name: "Comprehensive business trainings as offered by the centre" },
+  { id: 2, name: "Design thinking and lean startup" },
+  { id: 3, name: "Comprehensive business trainings as offered by the centre" },
 ];

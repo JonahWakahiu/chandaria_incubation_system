@@ -36,8 +36,8 @@ function App() {
           <Route path="/" element={<LandingPageLayout />}>
             <Route index element={<LandingPageHome />} />
             <Route path="registration" element={<RegistrationForm />} />
+            <Route path="login" element={<LoginPage />} setUser={setUser} />
           </Route>
-          <Route path="login" element={<LoginPage />} setUser={setUser} />
           <Route path="admin" element={<AdminNavbar />}>
             <Route index element={<AdminDashboard />} />
             <Route path="innovator" element={<AdminInnovator />} />

@@ -20,11 +20,9 @@
 
 @media screen and (min-width: 760px) {
   #loginContainer {
-    height: 89vh;
+    min-height: 91vh;
   }
 }
-
-
 
 /* old styles */
 #registrationHeader {

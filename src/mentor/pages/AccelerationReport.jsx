@@ -1,11 +1,12 @@
-import { Field, Form, Formik } from "formik";
+import { Field, Form, Formik, ErrorMessage } from "formik";
 import React from "react";
+import { TextField } from "@mui/material";
 
 function AccelerationReport() {
   return (
     <div className="container">
-      <div className="row">
-        <div className="col">
+      <div className="row justify-content-around mt-3">
+        <div className="col-md-6 ">
           <Formik
             initialValues={{
               incubateName: "",
@@ -18,88 +19,191 @@ function AccelerationReport() {
               resourseRequirement: "",
               otherComments: "",
             }}
+            onSubmit={(values) => {
+              const formData = new FormData();
+              Object.keys(values).forEach((key) => {
+                formData.append(key, values[key]);
+              });
+
+              for (let entry of formData.entries()) {
+                console.log(entry);
+              }
+
+              //sendPQuarterlyReport(formData);
+            }}
           >
             {(props) => (
-              <Form className="row g-2">
-                <label htmlFor="incubateName">Name of the Incubatee</label>
-                <Field
-                  type="text"
-                  name="incubateName"
-                  id="incubateName"
-                  className="form-control"
-                />
+              <Form className="row g-2 bg-light border shadow rounded p-3">
+                <legend>Innovation acceleration report</legend>
 
-                <label htmlFor="dateOfMentorship">Date of the mentorship</label>
-                <Field
-                  type="text"
-                  name="dateOfMentorship"
-                  id="dateOfMentorship"
-                  className="form-control"
-                />
+                {/* Name of Incubate */}
+                <div className="col-12 mb-2">
+                  <Field name="incubateName">
+                    {({ field }) => (
+                      <TextField
+                        {...field}
+                        variant="standard"
+                        fullWidth
+                        helperText={
+                          <span className="errors">
+                            <ErrorMessage name="incubateName " />
+                          </span>
+                        }
+                        label="Name of Mentee"
+                      />
+                    )}
+                  </Field>
+                </div>
 
-                <label htmlFor="mentorshipDuration">
-                  How long was the mentorship session?
-                </label>
-                <Field
-                  type="text"
-                  name="mentorshipDuration"
-                  id="mentorshipDuration"
-                  className="form-control"
-                />
+                {/* Date of mentorship */}
+                <div className="col-12 mb-2">
+                  <Field name="dateOfMentorship">
+                    {({ field }) => (
+                      <TextField
+                        {...field}
+                        variant="standard"
+                        fullWidth
+                        helperText={
+                          <span className="errors">
+                            <ErrorMessage name="dateOfMentorship" />
+                          </span>
+                        }
+                        label="Date of MentorShip"
+                      />
+                    )}
+                  </Field>
+                </div>
 
-                <label htmlFor="mentorName"> Name of the mentor</label>
-                <Field
-                  type="text"
-                  name="mentorName"
-                  id="mentorName"
-                  className="form-control"
-                />
+                {/* mentorship duration */}
+                <div className="col-12 mb-2">
+                  <Field name="mentorshipDuration">
+                    {({ field }) => (
+                      <TextField
+                        {...field}
+                        variant="standard"
+                        fullWidth
+                        helperText={
+                          <span className="errors">
+                            <ErrorMessage name="mentorshipDuration " />
+                          </span>
+                        }
+                        label="How Long was the mentorship session?"
+                      />
+                    )}
+                  </Field>
+                </div>
 
-                <label htmlFor="activitiesImplemented">
-                  List of challenges encountered
-                </label>
-                <Field
-                  type="text"
-                  name="activitiesImplemented"
-                  id="activitiesImplemented"
-                  className="form-control"
-                />
+                {/* mentors Name */}
+                <div className="col-12 mb-2">
+                  <Field name="mentorName">
+                    {({ field }) => (
+                      <TextField
+                        {...field}
+                        variant="standard"
+                        fullWidth
+                        helperText={
+                          <span className="errors">
+                            <ErrorMessage name="mentorName " />
+                          </span>
+                        }
+                        label="Name of the mentor"
+                      />
+                    )}
+                  </Field>
+                </div>
 
-                <label htmlFor="proposedSolution">
-                  List of proposed solution going forward
-                </label>
-                <Field
-                  type="text"
-                  name="proposedSolution"
-                  id="proposedSolution"
-                  className="form-control"
-                />
+                {/* activities implemented */}
+                <div className="col-12 mb-2">
+                  <Field name="activitiesImplemented">
+                    {({ field }) => (
+                      <TextField
+                        {...field}
+                        variant="standard"
+                        multiline
+                        maxRows={5}
+                        fullWidth
+                        helperText={
+                          <span className="errors">
+                            <ErrorMessage name="activitiesImplemented " />
+                          </span>
+                        }
+                        label="List of challenges encountered"
+                      />
+                    )}
+                  </Field>
+                </div>
 
-                <label htmlFor="resourceRequirement">
-                  List of resources requirement
-                </label>
-                <Field
-                  type="text"
-                  name="resourceRequirement"
-                  id="resourceRequirement"
-                  className="form-control"
-                />
+                {/* proposed solution */}
+                <div className="col-12 mb-2">
+                  <Field name="proposedSolution">
+                    {({ field }) => (
+                      <TextField
+                        {...field}
+                        variant="standard"
+                        multiline
+                        maxRows={5}
+                        fullWidth
+                        helperText={
+                          <span className="errors">
+                            <ErrorMessage name="proposedSolution " />
+                          </span>
+                        }
+                        label="List of proposed solution going forward"
+                      />
+                    )}
+                  </Field>
+                </div>
 
-                <label htmlFor="otherComments">Other comments / remarks</label>
-                <Field
-                  type="text"
-                  name="otherComments"
-                  id="otherComments"
-                  className="form-control"
-                />
+                {/* resource requirement */}
+                <div className="col-12 mb-2">
+                  <Field name="resourceRequirement">
+                    {({ field }) => (
+                      <TextField
+                        {...field}
+                        variant="standard"
+                        fullWidth
+                        multiline
+                        maxRows={5}
+                        helperText={
+                          <span className="errors">
+                            <ErrorMessage name="resourceRequirement " />
+                          </span>
+                        }
+                        label="List of resource requirement"
+                      />
+                    )}
+                  </Field>
+                </div>
 
-                <button className="btn btn-success"> Submit</button>
+                {/* Other comments */}
+                <div className="col-12 mb-2">
+                  <Field name="otherComments">
+                    {({ field }) => (
+                      <TextField
+                        {...field}
+                        variant="standard"
+                        maxRows={5}
+                        multiline
+                        fullWidth
+                        helperText={
+                          <span className="errors">
+                            <ErrorMessage name="otherComments " />
+                          </span>
+                        }
+                        label="Other comments / remarks"
+                      />
+                    )}
+                  </Field>
+                </div>
+
+                <div className="col-12 d-flex justify-content-center">
+                  <button className="btn btn-success w-50"> Submit</button>
+                </div>
               </Form>
             )}
           </Formik>
         </div>
-        <div className="col">
-          <h5>quartely report</h5>
+        <div className="col-md-5 ">
           <Formik
             initialValues={{
               numberOfSessions: "",
@@ -107,38 +211,108 @@ function AccelerationReport() {
               challengesFaced: "",
               achievementMilestone: "",
             }}
+            onSubmit={(values) => {
+              const formData = new FormData();
+              Object.keys(values).forEach((key) => {
+                formData.append(key, values[key]);
+              });
+
+              for (let entry of formData.entries()) {
+                console.log(entry);
+              }
+
+              //sendPQuarterlyReport(formData);
+            }}
           >
             {(props) => (
-              <Form className="row g-2">
-                <label htmlFor="numberOfSessions" className="form-label">
-                  Number of Sessions
-                </label>
-                <Field
-                  type="text"
-                  name="numberOfSessions"
-                  id="numberOfSessions"
-                  className="form-control"
-                />
+              <Form className="row g-2 border rounded shadow bg-light p-3">
+                <legend>Quarterly Report</legend>
 
-                <label htmlFor="menteeAchievement" className="form-label">
-                  Achievements achieved by the mentee during that quarter
-                </label>
-                <Field
-                  type="text"
-                  name="menteeAchievement"
-                  id="menteeAchievement"
-                  className="form-control"
-                />
+                {/* Number of Sessions */}
+                <div className="col-12 mb-2">
+                  <Field name="numberOfSessions">
+                    {({ field }) => (
+                      <TextField
+                        {...field}
+                        variant="standard"
+                        fullWidth
+                        helperText={
+                          <span className="errors">
+                            <ErrorMessage name="numberOfSessions " />
+                          </span>
+                        }
+                        label="Number of Sessions"
+                      />
+                    )}
+                  </Field>
+                </div>
+                {/* Mentee achievement */}
+                <div className="col-12 mb-2">
+                  <Field name="menteeAchievement">
+                    {({ field }) => (
+                      <TextField
+                        {...field}
+                        variant="standard"
+                        fullWidth
+                        multiline
+                        maxRows={5}
+                        helperText={
+                          <span className="errors">
+                            <ErrorMessage name="menteeAchievement " />
+                          </span>
+                        }
+                        label="Mentee Achievement"
+                      />
+                    )}
+                  </Field>
+                </div>
 
-                <label htmlFor="challengesFaced" className="form-label">
-                  Challenges faced by the mentee
-                </label>
-                <Field
-                  type="text"
-                  name="challengesFaced"
-                  id="challengesFaced"
-                  className="form-control"
-                />
+                {/* challenges Faced*/}
+                <div className="col-12 mb-2">
+                  <Field name="challengesFaced">
+                    {({ field }) => (
+                      <TextField
+                        {...field}
+                        variant="standard"
+                        multiline
+                        maxRows={5}
+                        fullWidth
+                        helperText={
+                          <span className="errors">
+                            <ErrorMessage name="challengesFaced " />
+                          </span>
+                        }
+                        label="Challenges Faced"
+                      />
+                    )}
+                  </Field>
+                </div>
+
+                {/* achievement milestone */}
+                <div className="col-12 mb-2">
+                  <Field name="achievementMilestone">
+                    {({ field }) => (
+                      <TextField
+                        {...field}
+                        multiline
+                        maxRows={5}
+                        variant="standard"
+                        fullWidth
+                        helperText={
+                          <span className="errors">
+                            <ErrorMessage name="achievementMilestone " />
+                          </span>
+                        }
+                        label="Achievement Milestone"
+                      />
+                    )}
+                  </Field>
+                </div>
+                <div className="col-12 d-flex justify-content-center">
+                  <button className="btn btn-success w-50" type="submit">
+                    Submit
+                  </button>
+                </div>
               </Form>
             )}
           </Formik>
